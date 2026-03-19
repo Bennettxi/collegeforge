@@ -22,8 +22,14 @@ export function RecommendationsList({ limit }: RecommendationsListProps) {
 
   return (
     <div className="space-y-3">
-      {displayed.map(rec => (
-        <RecommendationCard key={rec.id} recommendation={rec} />
+      {displayed.map((rec, index) => (
+        <div
+          key={rec.id}
+          className="animate-stagger-in"
+          style={{ animationDelay: `${index * 80}ms` }}
+        >
+          <RecommendationCard recommendation={rec} />
+        </div>
       ))}
     </div>
   );

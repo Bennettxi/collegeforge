@@ -18,6 +18,9 @@ export default function AcademicsPage() {
   const [apCount, setApCount] = useState(profile.academics.apCourseCount.toString());
   const [honorsCount, setHonorsCount] = useState(profile.academics.honorsCount.toString());
 
+  const gpaMax = gpaScale === '5.0' ? '5.0' : gpaScale === '100' ? '100' : '4.0';
+  const gpaPlaceholder = gpaScale === '5.0' ? 'e.g. 4.5' : gpaScale === '100' ? 'e.g. 95' : 'e.g. 3.85';
+
   const handleNext = () => {
     updateSection('academics', {
       gpaUnweighted: gpa ? parseFloat(gpa) : null,
@@ -41,8 +44,8 @@ export default function AcademicsPage() {
             type="number"
             step="0.01"
             min="0"
-            max="4.0"
-            placeholder="e.g. 3.85"
+            max={gpaMax}
+            placeholder={gpaPlaceholder}
             value={gpa}
             onChange={e => setGpa(e.target.value)}
           />

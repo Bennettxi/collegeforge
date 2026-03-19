@@ -8,10 +8,16 @@ interface StorageWrapper {
   profile: StudentProfile;
 }
 
-export function saveProfile(profile: StudentProfile): void {
-  if (typeof window === 'undefined') return;
-  const wrapper: StorageWrapper = { version: STORAGE_VERSION, profile };
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(wrapper));
+export function saveProfile(profile: StudentProfile): boolean {
+  if (typeof window === 'undefined') return false;
+  try {
+    const wrapper: StorageWrapper = { version: STORAGE_VERSION, profile };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(wrapper));
+    return true;
+  } catch (e) {
+    console.warn('Failed to save profile to localStorage:', e);
+    return false;
+  }
 }
 
 export function loadProfile(): StudentProfile | null {

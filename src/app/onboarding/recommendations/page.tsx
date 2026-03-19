@@ -31,10 +31,13 @@ export default function RecommendationsPage() {
   };
 
   const handleFinish = () => {
+    const totalLetters = parseInt(total) || 0;
+    const confirmedVal = Math.min(parseInt(confirmed) || 0, totalLetters);
+    const submittedVal = Math.min(parseInt(submitted) || 0, confirmedVal);
     updateSection('recommendations', {
-      totalLetters: parseInt(total) || 0,
-      confirmed: parseInt(confirmed) || 0,
-      submitted: parseInt(submitted) || 0,
+      totalLetters,
+      confirmed: confirmedVal,
+      submitted: submittedVal,
       recommenderTypes: types,
     });
     router.push('/dashboard');

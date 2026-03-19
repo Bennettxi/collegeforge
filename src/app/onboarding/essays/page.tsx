@@ -21,11 +21,13 @@ export default function EssaysPage() {
   const [feedbackSource, setFeedbackSource] = useState(profile.essays.feedbackSource ?? 'none');
 
   const handleNext = () => {
+    const planned = parseInt(suppCount) || 0;
+    const completed = Math.min(parseInt(suppDone) || 0, planned);
     updateSection('essays', {
       personalStatementStatus: status,
       personalStatementDrafts: parseInt(drafts) || 0,
-      supplementalEssayCount: parseInt(suppCount) || 0,
-      supplementalCompleted: parseInt(suppDone) || 0,
+      supplementalEssayCount: planned,
+      supplementalCompleted: completed,
       hasReceivedFeedback: hasFeedback,
       feedbackSource: hasFeedback ? feedbackSource as 'teacher' | 'counselor' | 'tutor' | 'peer' | 'none' : undefined,
     });

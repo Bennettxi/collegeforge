@@ -1,4 +1,8 @@
+'use client';
+
 import { Card } from '@/components/ui/Card';
+import { useInView } from '@/hooks/useInView';
+import { cn } from '@/lib/utils';
 
 const features = [
   {
@@ -19,8 +23,16 @@ const features = [
 ];
 
 export function FeatureCards() {
+  const { ref, inView } = useInView(0.15);
+
   return (
-    <section className="py-20 px-6 bg-white">
+    <section
+      ref={ref}
+      className={cn(
+        'py-20 px-6 bg-white transition-all duration-700',
+        inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+      )}
+    >
       <div className="max-w-5xl mx-auto">
         <h2 className="text-3xl font-bold text-center text-gray-900 mb-4">
           Everything You Need to Stand Out

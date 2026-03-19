@@ -1,9 +1,21 @@
+'use client';
+
 import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
+import { useInView } from '@/hooks/useInView';
+import { cn } from '@/lib/utils';
 
 export function CallToAction() {
+  const { ref, inView } = useInView(0.15);
+
   return (
-    <section className="py-20 px-6 bg-gradient-to-r from-emerald-600 to-green-600">
+    <section
+      ref={ref}
+      className={cn(
+        'py-20 px-6 bg-gradient-to-r from-emerald-600 to-green-600 transition-all duration-700',
+        inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+      )}
+    >
       <div className="max-w-3xl mx-auto text-center">
         <h2 className="text-3xl font-bold text-white mb-4">
           Ready to Build Your Best Application?

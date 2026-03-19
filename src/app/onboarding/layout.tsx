@@ -9,7 +9,9 @@ export default function OnboardingLayout({ children }: { children: React.ReactNo
           <p className="text-gray-500 text-sm mt-1">Tell us about your application to get your strength score</p>
         </div>
         <Card className="p-8">
-          {children}
+          <div className="animate-slide-up-fade">
+            {children}
+          </div>
         </Card>
       </div>
     </div>

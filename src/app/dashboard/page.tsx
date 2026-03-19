@@ -7,16 +7,13 @@ import { AvatarLevelUp } from '@/components/avatar/AvatarLevelUp';
 import { ScoreBreakdown } from '@/components/dashboard/ScoreBreakdown';
 import { RecommendationsList } from '@/components/dashboard/RecommendationsList';
 import { Button } from '@/components/ui/Button';
+import { DashboardSkeleton } from '@/components/ui/Skeleton';
 
 export default function DashboardPage() {
   const { isLoaded } = useProfile();
 
   if (!isLoaded) {
-    return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="text-gray-400 text-lg">Loading your profile...</div>
-      </div>
-    );
+    return <DashboardSkeleton />;
   }
 
   return (
