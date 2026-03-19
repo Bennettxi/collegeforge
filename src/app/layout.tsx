@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import { AuthProvider } from "@/context/AuthContext";
 import { ProfileProvider } from "@/context/ProfileContext";
+import { CollegeProvider } from "@/context/CollegeContext";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -24,7 +25,9 @@ export default function RootLayout({
       <body className={`${geistSans.variable} font-sans antialiased bg-white text-gray-900`}>
         <AuthProvider>
           <ProfileProvider>
-            {children}
+            <CollegeProvider>
+              {children}
+            </CollegeProvider>
           </ProfileProvider>
         </AuthProvider>
       </body>
