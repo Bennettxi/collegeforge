@@ -44,7 +44,7 @@ export function CollegeCard({ college, onUpdateStatus, onDelete }: CollegeCardPr
         onClick={onDelete}
         className={cn(
           'absolute top-3 right-3 w-7 h-7 flex items-center justify-center rounded-full',
-          'text-gray-400 hover:text-red-500 hover:bg-red-50',
+          'text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20',
           'opacity-0 group-hover:opacity-100 transition-all duration-200',
           'cursor-pointer'
         )}
@@ -58,7 +58,7 @@ export function CollegeCard({ college, onUpdateStatus, onDelete }: CollegeCardPr
       <div className="flex flex-col gap-3">
         {/* Name and tier badge row */}
         <div className="flex items-start gap-2 pr-8">
-          <h3 className="font-semibold text-gray-900 text-base leading-tight">
+          <h3 className="font-semibold text-gray-900 dark:text-white text-base leading-tight">
             {college.name}
           </h3>
           <span
@@ -89,7 +89,7 @@ export function CollegeCard({ college, onUpdateStatus, onDelete }: CollegeCardPr
             <span
               className={cn(
                 'text-sm font-medium flex items-center gap-1',
-                deadlinePast ? 'text-red-500' : 'text-gray-500'
+                deadlinePast ? 'text-red-500' : 'text-gray-500 dark:text-gray-400'
               )}
             >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
@@ -108,7 +108,7 @@ export function CollegeCard({ college, onUpdateStatus, onDelete }: CollegeCardPr
 
         {/* Notes */}
         {college.notes && (
-          <p className="text-sm text-gray-400 leading-relaxed">{college.notes}</p>
+          <p className="text-sm text-gray-400 dark:text-gray-500 leading-relaxed">{college.notes}</p>
         )}
       </div>
     </Card>

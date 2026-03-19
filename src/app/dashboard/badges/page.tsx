@@ -31,8 +31,8 @@ export default function BadgesPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Your Badges</h1>
-          <p className="text-sm text-gray-500 mt-1">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Your Badges</h1>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
             {earnedCount} of {totalCount} earned
           </p>
         </div>
@@ -44,7 +44,7 @@ export default function BadgesPage() {
       </div>
 
       {/* Progress bar */}
-      <div className="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden">
+      <div className="w-full bg-gray-100 dark:bg-gray-700 rounded-full h-2.5 overflow-hidden">
         <div
           className="bg-emerald-500 h-2.5 rounded-full transition-all duration-700 ease-out"
           style={{ width: `${totalCount > 0 ? (earnedCount / totalCount) * 100 : 0}%` }}
@@ -54,7 +54,7 @@ export default function BadgesPage() {
       {/* Earned badges section */}
       {earned.length > 0 && (
         <section>
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
             Earned
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -74,7 +74,7 @@ export default function BadgesPage() {
       {/* Locked badges section */}
       {locked.length > 0 && (
         <section>
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
             Locked
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -95,7 +95,7 @@ export default function BadgesPage() {
       {earnedCount === 0 && (
         <div className="text-center py-12 animate-fade-in">
           <p className="text-4xl mb-4">{'\u{1F331}'}</p>
-          <p className="text-gray-500 text-sm">
+          <p className="text-gray-500 dark:text-gray-400 text-sm">
             Start filling out your profile to earn badges!
           </p>
           <Link href="/onboarding" className="inline-block mt-4">

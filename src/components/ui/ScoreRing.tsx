@@ -38,7 +38,7 @@ export function ScoreRing({ score, size = 80, strokeWidth = 6, className }: Scor
           cy={size / 2}
           r={radius}
           fill="none"
-          stroke="#f3f4f6"
+          className="stroke-gray-100 dark:stroke-gray-700"
           strokeWidth={strokeWidth}
         />
         <circle

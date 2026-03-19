@@ -72,8 +72,8 @@ export default function SignupPage() {
     return (
       <Card className="p-8 text-center animate-slide-up-fade">
         <div className="text-4xl mb-4">📧</div>
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">Check Your Email</h1>
-        <p className="text-gray-500 text-sm mb-6">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Check Your Email</h1>
+        <p className="text-gray-500 dark:text-gray-400 text-sm mb-6">
           We sent a confirmation link to <strong>{email}</strong>. Click the link to activate your account.
         </p>
         <Link href="/auth/login">
@@ -85,13 +85,13 @@ export default function SignupPage() {
 
   return (
     <Card className="p-8 animate-slide-up-fade">
-      <h1 className="text-2xl font-bold text-gray-900 text-center mb-2">Create Your Account</h1>
-      <p className="text-gray-500 text-sm text-center mb-6">
+      <h1 className="text-2xl font-bold text-gray-900 dark:text-white text-center mb-2">Create Your Account</h1>
+      <p className="text-gray-500 dark:text-gray-400 text-sm text-center mb-6">
         Save your progress and access it from any device
       </p>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-xl p-3 mb-4">
+        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 text-sm rounded-xl p-3 mb-4">
           {error}
         </div>
       )}
@@ -128,10 +128,10 @@ export default function SignupPage() {
 
       <div className="relative my-6">
         <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-gray-200" />
+          <div className="w-full border-t border-gray-200 dark:border-gray-700" />
         </div>
         <div className="relative flex justify-center text-sm">
-          <span className="px-2 bg-white text-gray-400">or</span>
+          <span className="px-2 bg-white dark:bg-gray-800 text-gray-400 dark:text-gray-500">or</span>
         </div>
       </div>
 
@@ -150,9 +150,9 @@ export default function SignupPage() {
         Sign up with Google
       </Button>
 
-      <p className="text-center text-sm text-gray-500 mt-6">
+      <p className="text-center text-sm text-gray-500 dark:text-gray-400 mt-6">
         Already have an account?{' '}
-        <Link href="/auth/login" className="text-emerald-600 font-medium hover:underline">
+        <Link href="/auth/login" className="text-emerald-600 dark:text-emerald-400 font-medium hover:underline">
           Log in
         </Link>
       </p>

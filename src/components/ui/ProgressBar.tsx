@@ -19,14 +19,14 @@ export function ProgressBar({ value, max = 100, className, showLabel = false }: 
   const pct = Math.min(Math.max((value / max) * 100, 0), 100);
   return (
     <div className={cn('w-full', className)}>
-      <div className="h-2.5 bg-gray-100 rounded-full overflow-hidden">
+      <div className="h-2.5 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
         <div
           className={cn('h-full rounded-full transition-all duration-700 ease-out', getBarColor(pct))}
           style={{ width: `${pct}%` }}
         />
       </div>
       {showLabel && (
-        <p className="text-xs text-gray-500 mt-1 text-right">{Math.round(pct)}%</p>
+        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 text-right">{Math.round(pct)}%</p>
       )}
     </div>
   );

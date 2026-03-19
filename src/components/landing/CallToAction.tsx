@@ -24,8 +24,8 @@ export function CallToAction() {
           It only takes 5 minutes to see where you stand and get your personalized action plan.
         </p>
         <Link href="/onboarding">
-          <Button size="lg" className="bg-white text-emerald-700 hover:bg-emerald-50 from-white to-white hover:from-white hover:to-white">
-            Get Started Free →
+          <Button size="lg" variant="secondary" className="bg-white text-emerald-700 hover:bg-emerald-50 border-white/20 text-lg px-10 font-bold shadow-lg">
+            Build Application →
           </Button>
         </Link>
       </div>

@@ -16,8 +16,8 @@ export function BadgeCard({ badge, earned }: BadgeCardProps) {
       className={cn(
         'relative flex flex-col items-center text-center p-5 transition-all duration-300',
         earned
-          ? 'bg-white border-emerald-200'
-          : 'bg-gray-50 border-gray-100 opacity-60'
+          ? 'bg-white dark:bg-gray-800 border-emerald-200 dark:border-emerald-700'
+          : 'bg-gray-50 dark:bg-gray-800/50 border-gray-100 dark:border-gray-700 opacity-60'
       )}
       glow={earned ? '#10b981' : undefined}
     >
@@ -34,7 +34,7 @@ export function BadgeCard({ badge, earned }: BadgeCardProps) {
 
       {/* Lock overlay for unearned badges */}
       {!earned && (
-        <div className="absolute top-3 right-3 text-sm text-gray-400">
+        <div className="absolute top-3 right-3 text-sm text-gray-400 dark:text-gray-600">
           {'\u{1F512}'}
         </div>
       )}
@@ -58,7 +58,7 @@ export function BadgeCard({ badge, earned }: BadgeCardProps) {
       <h3
         className={cn(
           'text-sm font-bold mb-1',
-          earned ? 'text-gray-900' : 'text-gray-400'
+          earned ? 'text-gray-900 dark:text-white' : 'text-gray-400 dark:text-gray-500'
         )}
       >
         {badge.name}
@@ -68,7 +68,7 @@ export function BadgeCard({ badge, earned }: BadgeCardProps) {
       <p
         className={cn(
           'text-xs leading-relaxed',
-          earned ? 'text-gray-500' : 'text-gray-300'
+          earned ? 'text-gray-500 dark:text-gray-400' : 'text-gray-300 dark:text-gray-600'
         )}
       >
         {badge.description}
@@ -80,11 +80,11 @@ export function BadgeCard({ badge, earned }: BadgeCardProps) {
           'mt-3 inline-block text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full',
           earned
             ? badge.category === 'score'
-              ? 'bg-blue-50 text-blue-600'
+              ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400'
               : badge.category === 'profile'
-                ? 'bg-purple-50 text-purple-600'
-                : 'bg-amber-50 text-amber-600'
-            : 'bg-gray-100 text-gray-300'
+                ? 'bg-purple-50 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400'
+                : 'bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400'
+            : 'bg-gray-100 dark:bg-gray-700 text-gray-300 dark:text-gray-500'
         )}
       >
         {badge.category}

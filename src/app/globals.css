@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme inline {
   --font-sans: var(--font-geist-sans);
 }
@@ -7,6 +9,13 @@
 body {
   background: #ffffff;
   color: #171717;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.dark body,
+:root.dark body {
+  background: #111827;
+  color: #f3f4f6;
 }
 
 /* Avatar Animations */
@@ -114,4 +123,9 @@ body {
   background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
+}
+
+.dark .skeleton-shimmer {
+  background: linear-gradient(90deg, #1f2937 25%, #374151 50%, #1f2937 75%);
+  background-size: 200% 100%;
 }

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
+import { ThemeProvider } from "@/context/ThemeContext";
 import { AuthProvider } from "@/context/AuthContext";
 import { ProfileProvider } from "@/context/ProfileContext";
 import { CollegeProvider } from "@/context/CollegeContext";
@@ -21,15 +22,27 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${geistSans.variable} font-sans antialiased bg-white text-gray-900`}>
-        <AuthProvider>
-          <ProfileProvider>
-            <CollegeProvider>
-              {children}
-            </CollegeProvider>
-          </ProfileProvider>
-        </AuthProvider>
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: `
+          try {
+            const t = localStorage.getItem('collegeforge_theme');
+            if (t === 'dark' || (!t && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+              document.documentElement.classList.add('dark');
+            }
+          } catch(e) {}
+        `}} />
+      </head>
+      <body className={`${geistSans.variable} font-sans antialiased bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors`}>
+        <ThemeProvider>
+          <AuthProvider>
+            <ProfileProvider>
+              <CollegeProvider>
+                {children}
+              </CollegeProvider>
+            </ProfileProvider>
+          </AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -29,23 +29,23 @@ export function FeatureCards() {
     <section
       ref={ref}
       className={cn(
-        'py-20 px-6 bg-white transition-all duration-700',
+        'py-20 px-6 bg-white dark:bg-gray-900 transition-all duration-700',
         inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
       )}
     >
       <div className="max-w-5xl mx-auto">
-        <h2 className="text-3xl font-bold text-center text-gray-900 mb-4">
+        <h2 className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-4">
           Everything You Need to Stand Out
         </h2>
-        <p className="text-gray-500 text-center mb-12 max-w-xl mx-auto">
+        <p className="text-gray-500 dark:text-gray-400 text-center mb-12 max-w-xl mx-auto">
           CollegeForge breaks down your application into clear, actionable areas so you know exactly where to focus.
         </p>
         <div className="grid md:grid-cols-3 gap-6">
           {features.map((f) => (
             <Card key={f.title} hover className="text-center">
               <div className="text-4xl mb-4">{f.icon}</div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">{f.title}</h3>
-              <p className="text-gray-500 text-sm leading-relaxed">{f.description}</p>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">{f.title}</h3>
+              <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">{f.description}</p>
             </Card>
           ))}
         </div>

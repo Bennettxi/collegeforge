@@ -28,11 +28,11 @@ export function RecommendationCard({ recommendation }: RecommendationCardProps) 
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-1">
             <Badge variant={priorityVariant[priority]}>{priorityLabel[priority]}</Badge>
-            <span className="text-xs text-gray-400">{CATEGORY_LABELS[category]}</span>
+            <span className="text-xs text-gray-400 dark:text-gray-500">{CATEGORY_LABELS[category]}</span>
           </div>
-          <h3 className="font-semibold text-gray-900 text-sm">{title}</h3>
-          <p className="text-sm text-gray-500 mt-1">{description}</p>
-          <p className="text-xs text-emerald-600 mt-2 font-medium">{impact}</p>
+          <h3 className="font-semibold text-gray-900 dark:text-white text-sm">{title}</h3>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{description}</p>
+          <p className="text-xs text-emerald-600 dark:text-emerald-400 mt-2 font-medium">{impact}</p>
         </div>
       </div>
     </Card>

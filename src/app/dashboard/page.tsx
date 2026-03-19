@@ -22,8 +22,8 @@ export default function DashboardPage() {
 
       {/* Hero section with avatar */}
       <div className="flex flex-col items-center text-center">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">Your Application Strength</h1>
-        <p className="text-gray-500 text-sm mb-6">Here&apos;s how your college application stacks up</p>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Your Application Strength</h1>
+        <p className="text-gray-500 dark:text-gray-400 text-sm mb-6">Here&apos;s how your college application stacks up</p>
         <AvatarDisplay />
       </div>
 
@@ -33,7 +33,7 @@ export default function DashboardPage() {
       {/* Top Recommendations */}
       <div>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-gray-900">Top Recommendations</h2>
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Top Recommendations</h2>
           <Link href="/dashboard/recommendations">
             <Button variant="ghost" size="sm">View All →</Button>
           </Link>

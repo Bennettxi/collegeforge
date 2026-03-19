@@ -44,7 +44,7 @@ export function CategoryScoreCard({ categoryScore }: CategoryScoreCardProps) {
       hover
       className={cn(
         'flex flex-col items-center text-center p-5 cursor-pointer select-none transition-all duration-300',
-        expanded && 'ring-1 ring-emerald-200'
+        expanded && 'ring-1 ring-emerald-200 dark:ring-emerald-700'
       )}
     >
       {/* Clickable header area */}
@@ -62,13 +62,13 @@ export function CategoryScoreCard({ categoryScore }: CategoryScoreCardProps) {
         }}
       >
         <div className="text-2xl mb-2">{icon}</div>
-        <h3 className="text-sm font-semibold text-gray-900 mb-3">{displayLabel}</h3>
+        <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">{displayLabel}</h3>
         <ScoreRing score={score} size={72} strokeWidth={5} />
-        <p className="text-xs font-medium text-gray-500 mt-2">{label}</p>
+        <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mt-2">{label}</p>
 
         {/* Collapsed: show first breakdown description */}
         {!expanded && breakdown.length > 0 && (
-          <p className="text-xs text-gray-400 mt-1 line-clamp-2">
+          <p className="text-xs text-gray-400 dark:text-gray-500 mt-1 line-clamp-2">
             {breakdown[0].description}
           </p>
         )}
@@ -76,7 +76,7 @@ export function CategoryScoreCard({ categoryScore }: CategoryScoreCardProps) {
         {/* Expand/collapse chevron */}
         <span
           className={cn(
-            'inline-block mt-2 text-gray-400 text-xs transition-transform duration-300',
+            'inline-block mt-2 text-gray-400 dark:text-gray-500 text-xs transition-transform duration-300',
             expanded && 'rotate-180'
           )}
           aria-hidden="true"
@@ -92,14 +92,14 @@ export function CategoryScoreCard({ categoryScore }: CategoryScoreCardProps) {
       >
         <div ref={contentRef}>
           {breakdown.length > 0 && (
-            <div className="mt-4 pt-4 border-t border-gray-100 w-full space-y-3 text-left">
+            <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-700 w-full space-y-3 text-left">
               {breakdown.map((item, idx) => (
                 <div key={idx} className="space-y-1">
                   <div className="flex items-baseline justify-between gap-2">
-                    <span className="text-xs font-bold text-gray-800 truncate">
+                    <span className="text-xs font-bold text-gray-800 dark:text-gray-200 truncate">
                       {item.factor}
                     </span>
-                    <span className="text-xs text-gray-500 flex-shrink-0">
+                    <span className="text-xs text-gray-500 dark:text-gray-400 flex-shrink-0">
                       {item.value}/{BREAKDOWN_DISPLAY_MAX}
                     </span>
                   </div>
@@ -108,7 +108,7 @@ export function CategoryScoreCard({ categoryScore }: CategoryScoreCardProps) {
                     max={BREAKDOWN_DISPLAY_MAX}
                     className="w-full"
                   />
-                  <p className="text-xs text-gray-400">{item.description}</p>
+                  <p className="text-xs text-gray-400 dark:text-gray-500">{item.description}</p>
                 </div>
               ))}
             </div>

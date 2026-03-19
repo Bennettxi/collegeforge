@@ -27,11 +27,11 @@ export function AvatarDisplay({ className, showLabel = true }: AvatarDisplayProp
       </div>
       {showLabel && (
         <div className="text-center mt-4">
-          <p className="text-2xl font-bold text-gray-900">{score}</p>
+          <p className="text-2xl font-bold text-gray-900 dark:text-white">{score}</p>
           <p className="text-sm font-medium" style={{ color: avatarLevel.glowColor }}>
             Level {avatarLevel.level}: {avatarLevel.name}
           </p>
-          <p className="text-xs text-gray-500 mt-1">{avatarLevel.description}</p>
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{avatarLevel.description}</p>
         </div>
       )}
     </div>

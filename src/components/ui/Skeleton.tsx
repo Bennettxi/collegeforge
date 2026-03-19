@@ -10,7 +10,7 @@ export function Skeleton({ className }: SkeletonProps) {
 
 export function ScoreCardSkeleton() {
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 p-5 flex flex-col items-center gap-3">
+    <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-5 flex flex-col items-center gap-3">
       <Skeleton className="w-8 h-8 rounded-full" />
       <Skeleton className="w-20 h-4" />
       <Skeleton className="w-[72px] h-[72px] rounded-full" />

@@ -60,7 +60,7 @@ function AddEventForm({ onClose }: { onClose: () => void }) {
   return (
     <Card className="mb-6">
       <form onSubmit={handleSubmit} className="space-y-4">
-        <h3 className="text-sm font-semibold text-gray-900">New Event</h3>
+        <h3 className="text-sm font-semibold text-gray-900 dark:text-white">New Event</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Input
             label="Title"
@@ -109,7 +109,7 @@ function TimelineEventItem({ event }: { event: TimelineEvent }) {
   return (
     <div className="relative flex gap-4 pb-8 last:pb-0 group">
       {/* Vertical line */}
-      <div className="absolute left-[11px] top-6 bottom-0 w-0.5 bg-gray-200 group-last:hidden" />
+      <div className="absolute left-[11px] top-6 bottom-0 w-0.5 bg-gray-200 dark:bg-gray-700 group-last:hidden" />
 
       {/* Dot indicator */}
       <div
@@ -118,8 +118,8 @@ function TimelineEventItem({ event }: { event: TimelineEvent }) {
           event.completed
             ? 'bg-emerald-500 border-emerald-500'
             : overdue
-              ? 'bg-white border-red-400'
-              : 'bg-white border-gray-300'
+              ? 'bg-white dark:bg-gray-800 border-red-400'
+              : 'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600'
         )}
       >
         {event.completed && (
@@ -134,24 +134,24 @@ function TimelineEventItem({ event }: { event: TimelineEvent }) {
         className={cn(
           'flex-1 rounded-xl border p-4 transition-colors',
           event.completed
-            ? 'bg-gray-50 border-gray-100'
+            ? 'bg-gray-50 dark:bg-gray-800/50 border-gray-100 dark:border-gray-700'
             : overdue
-              ? 'bg-red-50 border-red-200'
-              : 'bg-white border-gray-200'
+              ? 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800'
+              : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700'
         )}
       >
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap mb-1">
-              <span className="text-xs font-medium text-gray-500">
+              <span className="text-xs font-medium text-gray-500 dark:text-gray-400">
                 {formatDate(event.date)}
               </span>
               <span
                 className={cn(
                   'inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full',
-                  event.category === 'deadline' && 'bg-red-100 text-red-700',
-                  event.category === 'milestone' && 'bg-emerald-100 text-emerald-700',
-                  event.category === 'task' && 'bg-blue-100 text-blue-700'
+                  event.category === 'deadline' && 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400',
+                  event.category === 'milestone' && 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400',
+                  event.category === 'task' && 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400'
                 )}
               >
                 {config.emoji} {config.label}
@@ -166,8 +166,8 @@ function TimelineEventItem({ event }: { event: TimelineEvent }) {
                 event.completed
                   ? 'text-gray-400 line-through'
                   : overdue
-                    ? 'text-red-800'
-                    : 'text-gray-900'
+                    ? 'text-red-800 dark:text-red-400'
+                    : 'text-gray-900 dark:text-white'
               )}
             >
               {event.title}
@@ -175,7 +175,7 @@ function TimelineEventItem({ event }: { event: TimelineEvent }) {
             {event.notes && (
               <p className={cn(
                 'text-xs mt-1',
-                event.completed ? 'text-gray-400' : 'text-gray-500'
+                event.completed ? 'text-gray-400' : 'text-gray-500 dark:text-gray-400'
               )}>
                 {event.notes}
               </p>
@@ -189,8 +189,8 @@ function TimelineEventItem({ event }: { event: TimelineEvent }) {
               className={cn(
                 'text-xs font-medium px-2 py-1 rounded-lg transition-colors',
                 event.completed
-                  ? 'text-gray-500 hover:bg-gray-200'
-                  : 'text-emerald-600 hover:bg-emerald-50'
+                  ? 'text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700'
+                  : 'text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20'
               )}
               title={event.completed ? 'Mark incomplete' : 'Mark complete'}
             >
@@ -198,7 +198,7 @@ function TimelineEventItem({ event }: { event: TimelineEvent }) {
             </button>
             <button
               onClick={() => removeEvent(event.id)}
-              className="text-xs text-gray-400 hover:text-red-500 px-2 py-1 rounded-lg hover:bg-red-50 transition-colors"
+              className="text-xs text-gray-400 hover:text-red-500 px-2 py-1 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
               title="Remove event"
             >
               Remove
@@ -230,8 +230,8 @@ function TimelineContent() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Application Timeline</h1>
-          <p className="text-sm text-gray-500 mt-1">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Application Timeline</h1>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
             Track your deadlines, milestones, and tasks
           </p>
         </div>
@@ -250,7 +250,7 @@ function TimelineContent() {
       {sortedEvents.length === 0 ? (
         <Card className="text-center py-16">
           <div className="text-4xl mb-3">📅</div>
-          <p className="text-gray-500 text-sm">
+          <p className="text-gray-500 dark:text-gray-400 text-sm">
             No events yet &mdash; add your first deadline!
           </p>
         </Card>

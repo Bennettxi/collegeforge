@@ -77,11 +77,11 @@ export default function CollegesPage() {
     return (
       <div className="pb-20 md:pb-8">
         <div className="animate-pulse space-y-4">
-          <div className="h-8 bg-gray-200 rounded w-48" />
-          <div className="h-4 bg-gray-100 rounded w-64" />
+          <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-48" />
+          <div className="h-4 bg-gray-100 dark:bg-gray-700 rounded w-64" />
           <div className="space-y-3 mt-8">
             {[1, 2, 3].map(i => (
-              <div key={i} className="h-24 bg-gray-100 rounded-2xl" />
+              <div key={i} className="h-24 bg-gray-100 dark:bg-gray-700 rounded-2xl" />
             ))}
           </div>
         </div>
@@ -94,15 +94,15 @@ export default function CollegesPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
             My College List
             {colleges.length > 0 && (
-              <span className="ml-2 text-base font-normal text-gray-400">
+              <span className="ml-2 text-base font-normal text-gray-400 dark:text-gray-500">
                 ({colleges.length})
               </span>
             )}
           </h1>
-          <p className="text-gray-500 text-sm mt-1">
+          <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">
             Organize your target schools by tier and track your application progress.
           </p>
         </div>
@@ -121,9 +121,9 @@ export default function CollegesPage() {
       {showForm && (
         <form
           onSubmit={handleSubmit}
-          className="bg-white rounded-2xl border border-gray-200 p-5 mb-8 shadow-sm animate-slide-down-fade"
+          className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-5 mb-8 shadow-sm animate-slide-down-fade"
         >
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Add a College</h2>
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Add a College</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Input
               label="College Name"
@@ -168,10 +168,10 @@ export default function CollegesPage() {
       {colleges.length === 0 && !showForm && (
         <div className="text-center py-16">
           <div className="text-5xl mb-4">🏫</div>
-          <h2 className="text-lg font-semibold text-gray-700 mb-2">
+          <h2 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">
             No colleges yet — start building your list!
           </h2>
-          <p className="text-sm text-gray-400 mb-6 max-w-md mx-auto">
+          <p className="text-sm text-gray-400 dark:text-gray-500 mb-6 max-w-md mx-auto">
             Add your target schools, organize them by tier, and track your application
             status all in one place.
           </p>
@@ -196,7 +196,7 @@ export default function CollegesPage() {
                   <h2 className={cn('text-lg font-semibold', config.color)}>
                     {config.label}
                   </h2>
-                  <span className="text-sm text-gray-400">
+                  <span className="text-sm text-gray-400 dark:text-gray-500">
                     ({tierColleges.length})
                   </span>
                 </div>

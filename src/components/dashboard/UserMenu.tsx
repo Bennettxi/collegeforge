@@ -33,16 +33,16 @@ export function UserMenu() {
       </button>
 
       {open && (
-        <div className="absolute right-0 top-12 w-64 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-50 animate-slide-down-fade">
-          <div className="px-4 py-3 border-b border-gray-100">
-            <p className="text-sm font-medium text-gray-900 truncate">{user.email}</p>
-            <p className="text-xs text-gray-400 mt-0.5">Signed in</p>
+        <div className="absolute right-0 top-12 w-64 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 py-2 z-50 animate-slide-down-fade">
+          <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-700">
+            <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{user.email}</p>
+            <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">Signed in</p>
           </div>
           <div className="p-2">
             <Button
               variant="ghost"
               size="sm"
-              className="w-full text-left text-red-600 hover:bg-red-50 hover:text-red-700"
+              className="w-full text-left text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-700"
               onClick={() => { signOut(); setOpen(false); }}
             >
               Sign Out
