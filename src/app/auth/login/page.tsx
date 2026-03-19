@@ -21,6 +21,11 @@ export default function LoginPage() {
     setError('');
 
     const supabase = createClient();
+    if (!supabase) {
+      setError('Authentication is not configured yet. Please continue as a guest.');
+      setLoading(false);
+      return;
+    }
     const { error } = await supabase.auth.signInWithPassword({ email, password });
 
     if (error) {
@@ -34,6 +39,10 @@ export default function LoginPage() {
 
   const handleGoogleLogin = async () => {
     const supabase = createClient();
+    if (!supabase) {
+      setError('Authentication is not configured yet. Please continue as a guest.');
+      return;
+    }
     await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {

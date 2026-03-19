@@ -32,6 +32,11 @@ export default function SignupPage() {
     setLoading(true);
 
     const supabase = createClient();
+    if (!supabase) {
+      setError('Authentication is not configured yet. Please use guest mode.');
+      setLoading(false);
+      return;
+    }
     const { error } = await supabase.auth.signUp({
       email,
       password,
@@ -51,6 +56,10 @@ export default function SignupPage() {
 
   const handleGoogleSignup = async () => {
     const supabase = createClient();
+    if (!supabase) {
+      setError('Authentication is not configured yet. Please use guest mode.');
+      return;
+    }
     await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {

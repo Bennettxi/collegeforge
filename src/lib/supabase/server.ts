@@ -1,7 +1,23 @@
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 
+function isSupabaseConfigured(): boolean {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  return !!(
+    url &&
+    key &&
+    !url.includes('placeholder') &&
+    !key.includes('placeholder') &&
+    url.startsWith('https://')
+  );
+}
+
 export async function createServerSupabaseClient() {
+  if (!isSupabaseConfigured()) {
+    return null;
+  }
+
   const cookieStore = await cookies();
 
   return createServerClient(
@@ -19,7 +35,6 @@ export async function createServerSupabaseClient() {
             );
           } catch {
             // The `setAll` method was called from a Server Component.
-            // This can be ignored if you have middleware refreshing sessions.
           }
         },
       },

@@ -23,6 +23,7 @@ const ProfileContext = createContext<ProfileContextValue | null>(null);
 async function loadFromSupabase(userId: string): Promise<StudentProfile | null> {
   try {
     const supabase = createClient();
+    if (!supabase) return null;
     const { data, error } = await supabase
       .from('profiles')
       .select('profile_data')
@@ -38,6 +39,7 @@ async function loadFromSupabase(userId: string): Promise<StudentProfile | null> 
 async function saveToSupabase(userId: string, profile: StudentProfile): Promise<boolean> {
   try {
     const supabase = createClient();
+    if (!supabase) return false;
     const { error } = await supabase
       .from('profiles')
       .upsert(
