@@ -4,9 +4,30 @@ import { useInView } from '@/hooks/useInView';
 import { cn } from '@/lib/utils';
 
 const steps = [
-  { number: '1', title: 'Input Your Profile', description: 'Enter your GPA, test scores, activities, essays, awards, and recommendations.' },
-  { number: '2', title: 'See Your Scores', description: 'Get instant scores for each category and watch your avatar grow.' },
-  { number: '3', title: 'Follow Your Plan', description: 'Act on personalized recommendations to strengthen weak areas.' },
+  {
+    number: '1',
+    title: 'Input Your Profile',
+    description: 'Enter your GPA, test scores, activities, essays, awards, and recommendations.',
+    icon: '📝',
+  },
+  {
+    number: '2',
+    title: 'See Your Scores',
+    description: 'Get instant scores for each category and watch your avatar grow.',
+    icon: '📊',
+  },
+  {
+    number: '3',
+    title: 'Match with Colleges',
+    description: 'Search 80+ colleges and see your match level — reach, match, or safety.',
+    icon: '🏛️',
+  },
+  {
+    number: '4',
+    title: 'Follow Your Plan',
+    description: 'Act on personalized recommendations to strengthen weak areas.',
+    icon: '🚀',
+  },
 ];
 
 export function HowItWorks() {
@@ -20,18 +41,28 @@ export function HowItWorks() {
         inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
       )}
     >
-      <div className="max-w-4xl mx-auto">
-        <h2 className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-12">
+      <div className="max-w-5xl mx-auto">
+        <h2 className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-4">
           How It Works
         </h2>
-        <div className="grid md:grid-cols-3 gap-8">
-          {steps.map((step) => (
-            <div key={step.number} className="text-center">
-              <div className="w-12 h-12 bg-emerald-500 text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">
-                {step.number}
+        <p className="text-gray-500 dark:text-gray-400 text-center mb-12 max-w-lg mx-auto">
+          Get your personalized application score in under 5 minutes
+        </p>
+        <div className="grid md:grid-cols-4 gap-6 md:gap-4">
+          {steps.map((step, i) => (
+            <div key={step.number} className="relative text-center">
+              {/* Connector line (hidden on mobile, visible on md+) */}
+              {i < steps.length - 1 && (
+                <div className="hidden md:block absolute top-6 left-[calc(50%+28px)] right-[calc(-50%+28px)] h-0.5 bg-gradient-to-r from-emerald-400 to-emerald-200 dark:from-emerald-600 dark:to-emerald-800" />
+              )}
+              <div className="relative z-10">
+                <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-green-600 text-white rounded-2xl flex items-center justify-center text-xl font-bold mx-auto mb-4 shadow-lg shadow-emerald-500/20">
+                  {step.icon}
+                </div>
+                <div className="text-xs font-bold text-emerald-500 mb-1">STEP {step.number}</div>
+                <h3 className="text-base font-semibold text-gray-900 dark:text-white mb-2">{step.title}</h3>
+                <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">{step.description}</p>
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">{step.title}</h3>
-              <p className="text-gray-500 dark:text-gray-400 text-sm">{step.description}</p>
             </div>
           ))}
         </div>

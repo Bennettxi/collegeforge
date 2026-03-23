@@ -2,15 +2,30 @@
 
 import Link from 'next/link';
 import { useProfile } from '@/context/ProfileContext';
+import { useColleges } from '@/context/CollegeContext';
+import { useScores } from '@/hooks/useScores';
 import { AvatarDisplay } from '@/components/avatar/AvatarDisplay';
 import { AvatarLevelUp } from '@/components/avatar/AvatarLevelUp';
 import { ScoreBreakdown } from '@/components/dashboard/ScoreBreakdown';
 import { RecommendationsList } from '@/components/dashboard/RecommendationsList';
+import { InsightsCards } from '@/components/dashboard/InsightsCards';
 import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
 import { DashboardSkeleton } from '@/components/ui/Skeleton';
+
+const QUICK_ACTIONS = [
+  { label: 'Edit Profile', href: '/dashboard/settings', icon: '✏️' },
+  { label: 'Add College', href: '/dashboard/colleges', icon: '🏛️' },
+  { label: 'Essay Coach', href: '/dashboard/essays', icon: '📝' },
+  { label: 'Share Card', href: '/dashboard/share', icon: '🎴' },
+  { label: 'View Timeline', href: '/dashboard/timeline', icon: '📅' },
+  { label: 'See Badges', href: '/dashboard/badges', icon: '🏅' },
+];
 
 export default function DashboardPage() {
   const { isLoaded } = useProfile();
+  const { colleges } = useColleges();
+  const scores = useScores();
 
   if (!isLoaded) {
     return <DashboardSkeleton />;
@@ -26,6 +41,24 @@ export default function DashboardPage() {
         <p className="text-gray-500 dark:text-gray-400 text-sm mb-6">Here&apos;s how your college application stacks up</p>
         <AvatarDisplay />
       </div>
+
+      {/* Quick Actions */}
+      <div className="grid grid-cols-3 md:grid-cols-6 gap-2 md:gap-3">
+        {QUICK_ACTIONS.map(action => (
+          <Link key={action.href} href={action.href}>
+            <Card
+              hover
+              className="!p-3 md:!p-4 flex flex-col items-center gap-1.5 text-center cursor-pointer"
+            >
+              <span className="text-xl md:text-2xl">{action.icon}</span>
+              <span className="text-[11px] md:text-xs font-medium text-gray-600 dark:text-gray-400">{action.label}</span>
+            </Card>
+          </Link>
+        ))}
+      </div>
+
+      {/* Insights */}
+      <InsightsCards />
 
       {/* Score Breakdown Grid */}
       <ScoreBreakdown />

@@ -1,13 +1,17 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef, useEffect } from 'react';
 import { useColleges } from '@/context/CollegeContext';
+import { useProfile } from '@/context/ProfileContext';
 import { CollegeCard } from '@/components/dashboard/CollegeCard';
+import { MatchBadge } from '@/components/dashboard/MatchBadge';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import { cn } from '@/lib/utils';
 import { CollegeTier, ApplicationStatus, TIER_CONFIG } from '@/types/college';
+import { searchColleges, CollegeStats } from '@/lib/colleges/data';
+import { calculateMatch } from '@/lib/colleges/matcher';
 
 const TIER_OPTIONS = [
   { value: 'reach', label: 'Reach' },
@@ -19,11 +23,34 @@ const TIER_ORDER: CollegeTier[] = ['reach', 'match', 'safety'];
 
 export default function CollegesPage() {
   const { colleges, addCollege, updateCollege, removeCollege, isLoaded } = useColleges();
+  const { profile, isLoaded: profileLoaded } = useProfile();
   const [showForm, setShowForm] = useState(false);
   const [formName, setFormName] = useState('');
   const [formTier, setFormTier] = useState<CollegeTier>('match');
   const [formDeadline, setFormDeadline] = useState('');
   const [formNotes, setFormNotes] = useState('');
+  const [searchResults, setSearchResults] = useState<CollegeStats[]>([]);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [selectedMatch, setSelectedMatch] = useState<CollegeStats | null>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Search as user types
+  useEffect(() => {
+    const results = searchColleges(formName);
+    setSearchResults(results);
+    setShowDropdown(results.length > 0 && formName.length >= 2);
+  }, [formName]);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setShowDropdown(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, []);
 
   // Group colleges by tier
   const grouped = useMemo(() => {
@@ -37,12 +64,23 @@ export default function CollegesPage() {
         groups[college.tier].push(college);
       }
     }
-    // Sort each group by addedAt descending (newest first)
     for (const tier of TIER_ORDER) {
       groups[tier].sort((a, b) => new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime());
     }
     return groups;
   }, [colleges]);
+
+  function selectFromSearch(college: CollegeStats) {
+    setFormName(college.name);
+    setSelectedMatch(college);
+    setShowDropdown(false);
+
+    // Auto-set tier based on match algorithm
+    if (profileLoaded) {
+      const match = calculateMatch(profile, college);
+      setFormTier(match.suggestedTier);
+    }
+  }
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -57,11 +95,11 @@ export default function CollegesPage() {
       notes: formNotes.trim(),
     });
 
-    // Reset form
     setFormName('');
     setFormTier('match');
     setFormDeadline('');
     setFormNotes('');
+    setSelectedMatch(null);
     setShowForm(false);
   }
 
@@ -70,6 +108,7 @@ export default function CollegesPage() {
     setFormTier('match');
     setFormDeadline('');
     setFormNotes('');
+    setSelectedMatch(null);
     setShowForm(false);
   }
 
@@ -117,6 +156,31 @@ export default function CollegesPage() {
         )}
       </div>
 
+      {/* Stats Summary */}
+      {colleges.length > 0 && (
+        <div className="grid grid-cols-3 gap-3 mb-6">
+          {TIER_ORDER.map(tier => {
+            const count = grouped[tier].length;
+            const config = TIER_CONFIG[tier];
+            return (
+              <div
+                key={tier}
+                className={cn(
+                  'rounded-xl border p-3 text-center transition-colors',
+                  config.bgColor
+                )}
+              >
+                <p className={cn('text-2xl font-bold', config.color)}>{count}</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 flex items-center justify-center gap-1">
+                  <span>{config.emoji}</span>
+                  {config.label}
+                </p>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
       {/* Inline Add Form */}
       {showForm && (
         <form
@@ -125,14 +189,49 @@ export default function CollegesPage() {
         >
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Add a College</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Input
-              label="College Name"
-              type="text"
-              value={formName}
-              onChange={(e) => setFormName(e.target.value)}
-              placeholder="e.g. MIT, Stanford, UCLA..."
-              autoFocus
-            />
+            {/* College name with search dropdown */}
+            <div className="relative" ref={dropdownRef}>
+              <Input
+                label="College Name"
+                type="text"
+                value={formName}
+                onChange={(e) => {
+                  setFormName(e.target.value);
+                  setSelectedMatch(null);
+                }}
+                placeholder="Search colleges (e.g. MIT, Stanford)..."
+                autoFocus
+                autoComplete="off"
+              />
+              {showDropdown && (
+                <div className="absolute z-50 top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-lg max-h-64 overflow-y-auto">
+                  {searchResults.map((college, i) => {
+                    const match = profileLoaded ? calculateMatch(profile, college) : null;
+                    return (
+                      <button
+                        key={i}
+                        type="button"
+                        onClick={() => selectFromSearch(college)}
+                        className="w-full text-left px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors flex items-center justify-between gap-2 cursor-pointer border-b border-gray-100 dark:border-gray-700 last:border-b-0"
+                      >
+                        <div className="min-w-0">
+                          <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{college.name}</p>
+                          <p className="text-xs text-gray-400 dark:text-gray-500">
+                            {college.acceptanceRate}% acceptance rate
+                          </p>
+                        </div>
+                        {match && (
+                          <div className="shrink-0">
+                            <MatchBadge match={match} />
+                          </div>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
             <Select
               label="Tier"
               options={TIER_OPTIONS}
@@ -153,6 +252,14 @@ export default function CollegesPage() {
               placeholder="Optional notes..."
             />
           </div>
+
+          {/* Selected college match preview */}
+          {selectedMatch && profileLoaded && (
+            <div className="mt-4 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
+              <MatchBadge match={calculateMatch(profile, selectedMatch)} showDetails />
+            </div>
+          )}
+
           <div className="flex items-center gap-3 mt-5">
             <Button type="submit" variant="primary" size="sm" disabled={!formName.trim()}>
               Add to List
@@ -173,7 +280,7 @@ export default function CollegesPage() {
           </h2>
           <p className="text-sm text-gray-400 dark:text-gray-500 mb-6 max-w-md mx-auto">
             Add your target schools, organize them by tier, and track your application
-            status all in one place.
+            status all in one place. We&apos;ll show you how well you match each school.
           </p>
           <Button variant="primary" size="md" onClick={() => setShowForm(true)}>
             + Add Your First College

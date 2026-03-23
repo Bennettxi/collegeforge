@@ -1,9 +1,12 @@
 'use client';
 
+import { useState } from 'react';
 import { Card } from '@/components/ui/Card';
 import { Select } from '@/components/ui/Select';
+import { MatchBadge } from '@/components/dashboard/MatchBadge';
 import { cn } from '@/lib/utils';
 import { College, CollegeTier, ApplicationStatus, TIER_CONFIG, STATUS_CONFIG } from '@/types/college';
+import { useCollegeMatchByName } from '@/hooks/useCollegeMatch';
 
 interface CollegeCardProps {
   college: College;
@@ -33,9 +36,11 @@ function isDeadlinePast(iso: string): boolean {
 }
 
 export function CollegeCard({ college, onUpdateStatus, onDelete }: CollegeCardProps) {
+  const [showMatchDetails, setShowMatchDetails] = useState(false);
   const tierConfig = TIER_CONFIG[college.tier as CollegeTier];
   const statusConfig = STATUS_CONFIG[college.applicationStatus as ApplicationStatus];
   const deadlinePast = college.deadline ? isDeadlinePast(college.deadline) : false;
+  const match = useCollegeMatchByName(college.name);
 
   return (
     <Card className="p-4 relative group animate-slide-up-fade">
@@ -72,6 +77,19 @@ export function CollegeCard({ college, onUpdateStatus, onDelete }: CollegeCardPr
             {tierConfig.label}
           </span>
         </div>
+
+        {/* Match indicator */}
+        {match && (
+          <div>
+            <button
+              type="button"
+              onClick={() => setShowMatchDetails(!showMatchDetails)}
+              className="cursor-pointer hover:opacity-80 transition-opacity"
+            >
+              <MatchBadge match={match} showDetails={showMatchDetails} />
+            </button>
+          </div>
+        )}
 
         {/* Status and deadline row */}
         <div className="flex flex-wrap items-center gap-3">

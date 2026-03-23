@@ -12,17 +12,21 @@ import { cn } from '@/lib/utils';
 const NAV_ITEMS = [
   { label: 'Overview', path: '/dashboard', icon: '📊' },
   { label: 'Colleges', path: '/dashboard/colleges', icon: '🏛️' },
+  { label: 'Essays', path: '/dashboard/essays', icon: '📝' },
   { label: 'Timeline', path: '/dashboard/timeline', icon: '📅' },
   { label: 'Badges', path: '/dashboard/badges', icon: '🏅' },
-  { label: 'Tips', path: '/dashboard/recommendations', icon: '🎯' },
+  { label: 'Share', path: '/dashboard/share', icon: '🎴' },
+  { label: 'Profile', path: '/dashboard/settings', icon: '⚙️' },
 ];
 
+// Tips accessible from dashboard overview, not in main nav
+
 const MOBILE_NAV = [
-  { label: 'Home', path: '/', icon: '🏠' },
   { label: 'Overview', path: '/dashboard', icon: '📊' },
   { label: 'Colleges', path: '/dashboard/colleges', icon: '🏛️' },
-  { label: 'Timeline', path: '/dashboard/timeline', icon: '📅' },
-  { label: 'More', path: '/dashboard/badges', icon: '🏅' },
+  { label: 'Essays', path: '/dashboard/essays', icon: '📝' },
+  { label: 'Badges', path: '/dashboard/badges', icon: '🏅' },
+  { label: 'Profile', path: '/dashboard/settings', icon: '⚙️' },
 ];
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -55,8 +59,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </div>
 
           {/* Desktop nav */}
-          <div className="hidden md:flex items-center gap-3">
-            <nav className="flex items-center gap-1">
+          <div className="hidden md:flex items-center gap-2">
+            <nav className="flex items-center">
               {NAV_ITEMS.map(item => {
                 const isActive = pathname === item.path;
                 return (
@@ -64,13 +68,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     key={item.path}
                     href={item.path}
                     className={cn(
-                      'relative px-3 py-2 rounded-lg text-sm font-medium transition-colors',
+                      'relative px-2.5 py-1.5 rounded-lg text-[13px] font-medium transition-colors whitespace-nowrap',
                       isActive
                         ? 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400'
                         : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
                     )}
                   >
-                    <span className="mr-1">{item.icon}</span>
                     {item.label}
                     {isActive && (
                       <span className="absolute bottom-0 left-2 right-2 h-0.5 bg-emerald-500 rounded-full animate-scale-in" />
@@ -78,13 +81,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   </Link>
                 );
               })}
-              <Link
-                href="/onboarding"
-                className="px-3 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-              >
-                <span className="mr-1">✏️</span>
-                Edit
-              </Link>
             </nav>
 
             <ThemeToggle />
