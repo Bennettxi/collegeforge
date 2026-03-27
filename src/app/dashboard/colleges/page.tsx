@@ -3,6 +3,8 @@
 import { useState, useMemo, useRef, useEffect } from 'react';
 import { useColleges } from '@/context/CollegeContext';
 import { useProfile } from '@/context/ProfileContext';
+import { useSubscription } from '@/context/SubscriptionContext';
+import { UpgradePrompt } from '@/components/ui/UpgradePrompt';
 import { CollegeCard } from '@/components/dashboard/CollegeCard';
 import { MatchBadge } from '@/components/dashboard/MatchBadge';
 import { Button } from '@/components/ui/Button';
@@ -24,6 +26,9 @@ const TIER_ORDER: CollegeTier[] = ['reach', 'match', 'safety'];
 export default function CollegesPage() {
   const { colleges, addCollege, updateCollege, removeCollege, isLoaded } = useColleges();
   const { profile, isLoaded: profileLoaded } = useProfile();
+  const { isPremium, getLimit } = useSubscription();
+  const maxColleges = getLimit('maxColleges');
+  const atCollegeLimit = !isPremium && colleges.length >= maxColleges;
   const [showForm, setShowForm] = useState(false);
   const [formName, setFormName] = useState('');
   const [formTier, setFormTier] = useState<CollegeTier>('match');
@@ -150,11 +155,26 @@ export default function CollegesPage() {
             variant="primary"
             size="sm"
             onClick={() => setShowForm(true)}
+            disabled={atCollegeLimit}
           >
             + Add College
           </Button>
         )}
       </div>
+
+      {/* Free plan college limit banner */}
+      {!isPremium && (
+        <div className="flex items-center justify-between px-4 py-2.5 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 text-sm">
+          <span className="text-amber-700 dark:text-amber-300">
+            Free plan: {colleges.length} of {maxColleges} colleges used
+          </span>
+          {atCollegeLimit && (
+            <span className="text-xs font-medium text-amber-600 dark:text-amber-400">
+              Upgrade for unlimited
+            </span>
+          )}
+        </div>
+      )}
 
       {/* Stats Summary */}
       {colleges.length > 0 && (
@@ -182,7 +202,15 @@ export default function CollegesPage() {
       )}
 
       {/* Inline Add Form */}
-      {showForm && (
+      {showForm && atCollegeLimit && (
+        <div className="mb-8 animate-slide-down-fade">
+          <UpgradePrompt
+            feature="Unlimited Colleges"
+            description={`You've reached the free plan limit of ${maxColleges} colleges. Upgrade to add more.`}
+          />
+        </div>
+      )}
+      {showForm && !atCollegeLimit && (
         <form
           onSubmit={handleSubmit}
           className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-5 mb-8 shadow-sm animate-slide-down-fade"

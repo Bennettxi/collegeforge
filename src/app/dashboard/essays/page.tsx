@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
+import { useSubscription } from '@/context/SubscriptionContext';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { ScoreRing } from '@/components/ui/ScoreRing';
@@ -92,6 +93,7 @@ function CategoryBar({ name, score, label, icon, feedback }: { name: string; sco
 }
 
 export default function EssayCoachPage() {
+  const { isPremium } = useSubscription();
   const [essayText, setEssayText] = useState('');
   const [selectedPrompt, setSelectedPrompt] = useState<number | null>(null);
   const [hasAnalyzed, setHasAnalyzed] = useState(false);
@@ -133,6 +135,15 @@ export default function EssayCoachPage() {
           <Button variant="ghost" size="sm">&larr; Dashboard</Button>
         </Link>
       </div>
+
+      {/* Free plan banner */}
+      {!isPremium && (
+        <div className="flex items-center justify-between px-4 py-2.5 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 text-sm">
+          <span className="text-amber-700 dark:text-amber-300">
+            Free plan: 1 essay analysis included. Upgrade for unlimited.
+          </span>
+        </div>
+      )}
 
       {/* Prompt Picker */}
       <Card className="!p-4">

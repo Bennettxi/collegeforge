@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { UserMenu } from '@/components/dashboard/UserMenu';
 import { SaveIndicator } from '@/components/ui/SaveIndicator';
-import { ThemeToggle } from '@/components/ui/ThemeToggle';
+
 import { Button } from '@/components/ui/Button';
 import { cn } from '@/lib/utils';
 
@@ -84,8 +84,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 );
               })}
             </nav>
-
-            <ThemeToggle />
 
             {/* User menu or sign in button */}
             {user ? (

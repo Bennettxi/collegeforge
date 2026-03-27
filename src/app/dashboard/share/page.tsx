@@ -3,6 +3,7 @@
 import { useRef, useState, useCallback } from 'react';
 import Link from 'next/link';
 import { useProfile } from '@/context/ProfileContext';
+import { useSubscription } from '@/context/SubscriptionContext';
 import { useScores } from '@/hooks/useScores';
 import { useBadges } from '@/hooks/useBadges';
 import { useColleges } from '@/context/CollegeContext';
@@ -87,6 +88,8 @@ export default function SharePage() {
   const scores = useScores();
   const { earnedCount, totalCount, badges } = useBadges();
   const { colleges } = useColleges();
+  const { canAccess } = useSubscription();
+  const hasAllThemes = canAccess('all_share_themes');
   const [selectedTheme, setSelectedTheme] = useState(0);
   const [copied, setCopied] = useState(false);
   const [downloading, setDownloading] = useState(false);
@@ -341,25 +344,38 @@ export default function SharePage() {
           Choose a theme
         </p>
         <div className="flex gap-3 flex-wrap">
-          {CARD_THEMES.map((t, i) => (
-            <button
-              key={t.id}
-              onClick={() => setSelectedTheme(i)}
-              className={cn(
-                'relative w-12 h-12 rounded-xl bg-gradient-to-br transition-all duration-200',
-                t.bg,
-                selectedTheme === i
-                  ? 'ring-2 ring-offset-2 ring-emerald-500 dark:ring-offset-gray-900 scale-110'
-                  : 'hover:scale-105 opacity-70 hover:opacity-100'
-              )}
-              title={t.name}
-            >
-              {selectedTheme === i && (
-                <span className="absolute inset-0 flex items-center justify-center text-white text-lg">✓</span>
-              )}
-            </button>
-          ))}
+          {CARD_THEMES.map((t, i) => {
+            const isLocked = !hasAllThemes && i > 0;
+            return (
+              <button
+                key={t.id}
+                onClick={() => !isLocked && setSelectedTheme(i)}
+                className={cn(
+                  'relative w-12 h-12 rounded-xl bg-gradient-to-br transition-all duration-200',
+                  t.bg,
+                  isLocked && 'cursor-not-allowed opacity-40',
+                  selectedTheme === i
+                    ? 'ring-2 ring-offset-2 ring-emerald-500 dark:ring-offset-gray-900 scale-110'
+                    : !isLocked && 'hover:scale-105 opacity-70 hover:opacity-100'
+                )}
+                title={isLocked ? `🔒 Upgrade to unlock ${t.name} theme` : t.name}
+                disabled={isLocked}
+              >
+                {selectedTheme === i && (
+                  <span className="absolute inset-0 flex items-center justify-center text-white text-lg">✓</span>
+                )}
+                {isLocked && (
+                  <span className="absolute inset-0 flex items-center justify-center text-white text-sm">🔒</span>
+                )}
+              </button>
+            );
+          })}
         </div>
+        {!hasAllThemes && (
+          <p className="text-xs text-amber-600 dark:text-amber-400 mt-2">
+            <a href="/dashboard/settings" className="underline hover:no-underline">Unlock all themes</a> with Mighty Oak
+          </p>
+        )}
       </div>
 
       {/* Card Preview + Actions */}

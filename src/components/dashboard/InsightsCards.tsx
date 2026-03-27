@@ -4,6 +4,7 @@ import { useMemo } from 'react';
 import Link from 'next/link';
 import { useProfile } from '@/context/ProfileContext';
 import { useColleges } from '@/context/CollegeContext';
+import { useSubscription } from '@/context/SubscriptionContext';
 import { useScores } from '@/hooks/useScores';
 import { Card } from '@/components/ui/Card';
 import { cn } from '@/lib/utils';
@@ -22,6 +23,7 @@ interface Insight {
 export function InsightsCards() {
   const { profile, isLoaded: profileLoaded } = useProfile();
   const { colleges, isLoaded: collegesLoaded } = useColleges();
+  const { canAccess } = useSubscription();
   const scores = useScores();
 
   const insights = useMemo(() => {
@@ -168,6 +170,29 @@ export function InsightsCards() {
   }, [profile, profileLoaded, colleges, collegesLoaded, scores]);
 
   if (insights.length === 0) return null;
+
+  if (!canAccess('insights_cards')) {
+    return (
+      <div>
+        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Insights</h2>
+        <Card className="!p-6 text-center border-l-4 border-l-violet-300 dark:border-l-violet-600">
+          <div className="text-3xl mb-2">🔒</div>
+          <p className="font-semibold text-gray-900 dark:text-white text-sm">
+            Unlock personalized insights with Mighty Oak
+          </p>
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+            Get tailored recommendations based on your profile and college list
+          </p>
+          <Link
+            href="/dashboard/settings"
+            className="inline-block text-xs font-medium text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 mt-3 transition-colors"
+          >
+            Upgrade now →
+          </Link>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div>

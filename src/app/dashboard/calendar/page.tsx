@@ -3,6 +3,8 @@
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useColleges } from '@/context/CollegeContext';
+import { useSubscription } from '@/context/SubscriptionContext';
+import { UpgradePrompt } from '@/components/ui/UpgradePrompt';
 import { getUpcomingDeadlines, CollegeDeadline } from '@/lib/colleges/deadlines';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -65,6 +67,7 @@ function monthKey(dateStr: string): string {
 
 export default function CalendarPage() {
   const { colleges, isLoaded } = useColleges();
+  const { canAccess } = useSubscription();
   const [activeFilter, setActiveFilter] = useState<FilterType>('All');
 
   const allDeadlines = useMemo(() => {
@@ -126,6 +129,41 @@ export default function CalendarPage() {
             </Button>
           </Link>
         </Card>
+      </div>
+    );
+  }
+
+  if (!canAccess('deadline_calendar')) {
+    return (
+      <div className="max-w-3xl mx-auto px-4 py-8 animate-slide-up-fade">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+            <span>{'📅'}</span> Application Calendar
+          </h1>
+          <p className="text-gray-500 dark:text-gray-400 mt-1">
+            Never miss an important deadline
+          </p>
+        </div>
+        <UpgradePrompt
+          feature="Deadline Calendar"
+          description="Track all your application deadlines in one place with filters and countdown timers"
+        />
+        <div className="blur-sm opacity-50 pointer-events-none select-none mt-6" aria-hidden="true">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+            <Card className="text-center py-4">
+              <p className="text-3xl font-bold text-emerald-600 dark:text-emerald-400">{upcomingDeadlines.length}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Upcoming Deadlines</p>
+            </Card>
+            <Card className="text-center py-4">
+              <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">--</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Next deadline</p>
+            </Card>
+            <Card className="text-center py-4">
+              <p className="text-3xl font-bold text-amber-600 dark:text-amber-400">{thisMonthCount}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">This Month</p>
+            </Card>
+          </div>
+        </div>
       </div>
     );
   }

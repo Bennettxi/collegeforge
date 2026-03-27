@@ -6,6 +6,7 @@ import { ProfileProvider } from "@/context/ProfileContext";
 import { CollegeProvider } from "@/context/CollegeContext";
 import { StreakProvider } from "@/context/StreakContext";
 import { DocumentProvider } from "@/context/DocumentContext";
+import { SubscriptionProvider } from "@/context/SubscriptionContext";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -42,7 +43,9 @@ export default function RootLayout({
               <CollegeProvider>
                 <StreakProvider>
                   <DocumentProvider>
-                    {children}
+                    <SubscriptionProvider>
+                      {children}
+                    </SubscriptionProvider>
                   </DocumentProvider>
                 </StreakProvider>
               </CollegeProvider>

@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useDocuments } from '@/context/DocumentContext';
+import { useSubscription } from '@/context/SubscriptionContext';
+import { UpgradePrompt } from '@/components/ui/UpgradePrompt';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { cn } from '@/lib/utils';
@@ -25,6 +27,9 @@ const defaultForm = {
 
 export default function DocumentsPage() {
   const { documents, addDocument, updateDocument, removeDocument, isLoaded } = useDocuments();
+  const { isPremium, getLimit } = useSubscription();
+  const maxDocuments = getLimit('maxDocuments');
+  const atDocLimit = !isPremium && documents.length >= maxDocuments;
 
   const [filter, setFilter] = useState<FilterCategory>('all');
   const [showForm, setShowForm] = useState(false);
@@ -155,6 +160,20 @@ export default function DocumentsPage() {
         </Card>
       </div>
 
+      {/* Document limit banner */}
+      {!isPremium && (
+        <div className="flex items-center justify-between px-4 py-2.5 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 text-sm">
+          <span className="text-amber-700 dark:text-amber-300">
+            Free plan: {documents.length} of {maxDocuments} documents used
+          </span>
+          {atDocLimit && (
+            <span className="text-xs font-medium text-amber-600 dark:text-amber-400">
+              Upgrade for unlimited
+            </span>
+          )}
+        </div>
+      )}
+
       {/* Category Filter */}
       <div className="flex gap-2 overflow-x-auto pb-2 -mx-1 px-1 scrollbar-hide">
         <button
@@ -190,11 +209,21 @@ export default function DocumentsPage() {
           variant={showForm ? 'secondary' : 'primary'}
           size="sm"
           onClick={() => setShowForm(!showForm)}
+          disabled={atDocLimit && !showForm}
         >
           {showForm ? 'Cancel' : '+ Add Document'}
         </Button>
 
-        {showForm && (
+        {showForm && atDocLimit && (
+          <div className="mt-4 animate-slide-down-fade">
+            <UpgradePrompt
+              feature="Unlimited Documents"
+              description={`You've reached the free plan limit of ${maxDocuments} documents. Upgrade to add more.`}
+            />
+          </div>
+        )}
+
+        {showForm && !atDocLimit && (
           <Card className="mt-4 animate-slide-down-fade">
             <div className="space-y-4">
               {/* Name */}

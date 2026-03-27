@@ -3,6 +3,8 @@
 import { useState, useMemo, useCallback } from 'react';
 import { useProfile } from '@/context/ProfileContext';
 import { useColleges } from '@/context/CollegeContext';
+import { useSubscription } from '@/context/SubscriptionContext';
+import { UpgradePrompt } from '@/components/ui/UpgradePrompt';
 import { calculateMatch, MATCH_CONFIG, MatchLevel } from '@/lib/colleges/matcher';
 import { COLLEGE_DATABASE } from '@/lib/colleges/data';
 import { StudentProfile } from '@/types/profile';
@@ -183,6 +185,7 @@ function MatchBadge({ level }: { level: MatchLevel }) {
 export default function SimulatorPage() {
   const { profile, isLoaded: profileLoaded } = useProfile();
   const { colleges, isLoaded: collegesLoaded } = useColleges();
+  const { canAccess } = useSubscription();
 
   const originalValues = useMemo(() => getOriginalValues(profile), [profile]);
   const [simValues, setSimValues] = useState<SimValues | null>(null);
@@ -250,6 +253,49 @@ export default function SimulatorPage() {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="w-8 h-8 border-4 border-emerald-200 border-t-emerald-600 rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (!canAccess('what_if_simulator')) {
+    return (
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+            What If Simulator
+          </h1>
+          <p className="mt-1 text-gray-500 dark:text-gray-400">
+            See how improving your profile changes your college matches
+          </p>
+        </div>
+        <UpgradePrompt
+          feature="What-If Simulator"
+          description="See how improving your scores changes your college matches"
+        />
+        <div className="blur-sm opacity-50 pointer-events-none select-none" aria-hidden="true">
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+            <div className="lg:col-span-2">
+              <Card className="space-y-5">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Adjust Your Profile</h2>
+                {SLIDERS.map((slider) => (
+                  <div key={slider.key} className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{slider.label}</span>
+                      <span className="text-sm font-semibold text-gray-900 dark:text-white">{slider.format(slider.min)}</span>
+                    </div>
+                    <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded-lg" />
+                  </div>
+                ))}
+              </Card>
+            </div>
+            <div className="lg:col-span-3">
+              <Card className="text-center py-12">
+                <div className="text-4xl mb-3">🎓</div>
+                <p className="text-gray-500 dark:text-gray-400 font-medium">Match Results</p>
+              </Card>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }

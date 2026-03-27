@@ -2,14 +2,18 @@
 
 import Link from 'next/link';
 import { useProfile } from '@/context/ProfileContext';
+import { useSubscription } from '@/context/SubscriptionContext';
 import { useBadges } from '@/hooks/useBadges';
 import { BadgeCard } from '@/components/dashboard/BadgeCard';
 import { ScoreRing } from '@/components/ui/ScoreRing';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
+import { cn } from '@/lib/utils';
 
 export default function BadgesPage() {
   const { isLoaded } = useProfile();
+  const { canAccess } = useSubscription();
+  const hasAllBadges = canAccess('all_badges');
   const { badges, earnedCount, totalCount } = useBadges();
 
   if (!isLoaded) {
@@ -29,6 +33,7 @@ export default function BadgesPage() {
   const locked = badges.filter((b) => !b.earned);
   const nextBadge = locked[0]; // first locked badge is the easiest to earn next
   const pct = totalCount > 0 ? Math.round((earnedCount / totalCount) * 100) : 0;
+  const maxFreeBadges = 5;
 
   return (
     <div className="space-y-8 pb-20 md:pb-8">
@@ -75,6 +80,25 @@ export default function BadgesPage() {
         </Card>
       )}
 
+      {/* Unlock all badges banner */}
+      {!hasAllBadges && (
+        <Card className="!p-4 border-l-4 border-l-violet-400 dark:border-l-violet-500">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="font-semibold text-sm text-gray-900 dark:text-white">
+                Unlock all badges with Mighty Oak
+              </p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                Free plan shows the first {maxFreeBadges} badges. Upgrade to see and earn them all.
+              </p>
+            </div>
+            <Link href="/dashboard/settings">
+              <Button variant="primary" size="sm">Upgrade</Button>
+            </Link>
+          </div>
+        </Card>
+      )}
+
       {/* Earned badges section */}
       {earned.length > 0 && (
         <section>
@@ -82,15 +106,23 @@ export default function BadgesPage() {
             Earned
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {earned.map((eb, index) => (
-              <div
-                key={eb.badge.id}
-                className="animate-stagger-in"
-                style={{ animationDelay: `${index * 80}ms` }}
-              >
-                <BadgeCard badge={eb.badge} earned={eb.earned} />
-              </div>
-            ))}
+            {earned.map((eb, index) => {
+              const isGated = !hasAllBadges && index >= maxFreeBadges;
+              return (
+                <div
+                  key={eb.badge.id}
+                  className={cn('animate-stagger-in relative', isGated && 'opacity-40 pointer-events-none')}
+                  style={{ animationDelay: `${index * 80}ms` }}
+                >
+                  <BadgeCard badge={eb.badge} earned={eb.earned} />
+                  {isGated && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-gray-900/20 dark:bg-gray-900/40 rounded-2xl">
+                      <span className="text-2xl">🔒</span>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </section>
       )}
@@ -102,15 +134,24 @@ export default function BadgesPage() {
             Locked
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {locked.map((eb, index) => (
-              <div
-                key={eb.badge.id}
-                className="animate-stagger-in"
-                style={{ animationDelay: `${(earned.length + index) * 80}ms` }}
-              >
-                <BadgeCard badge={eb.badge} earned={eb.earned} />
-              </div>
-            ))}
+            {locked.map((eb, index) => {
+              const globalIndex = earned.length + index;
+              const isGated = !hasAllBadges && globalIndex >= maxFreeBadges;
+              return (
+                <div
+                  key={eb.badge.id}
+                  className={cn('animate-stagger-in relative', isGated && 'opacity-40 pointer-events-none')}
+                  style={{ animationDelay: `${globalIndex * 80}ms` }}
+                >
+                  <BadgeCard badge={eb.badge} earned={eb.earned} />
+                  {isGated && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-gray-900/20 dark:bg-gray-900/40 rounded-2xl">
+                      <span className="text-2xl">🔒</span>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </section>
       )}
