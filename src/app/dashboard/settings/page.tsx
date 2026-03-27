@@ -37,12 +37,12 @@ interface TabDef {
 }
 
 const TABS: TabDef[] = [
-  { key: 'profile', icon: '\u{1F464}', label: 'User Profile' },
-  { key: 'subscription', icon: '\u{1F48E}', label: 'Subscription' },
-  { key: 'appearance', icon: '\u{1F3A8}', label: 'Appearance' },
-  { key: 'application', icon: '\u{1F4CB}', label: 'Application Profile' },
-  { key: 'notifications', icon: '\u{1F514}', label: 'Notifications' },
-  { key: 'privacy', icon: '\u{1F512}', label: 'Data & Privacy' },
+  { key: 'profile', icon: '👤', label: 'User Profile' },
+  { key: 'subscription', icon: '💎', label: 'Subscription' },
+  { key: 'appearance', icon: '🎨', label: 'Appearance' },
+  { key: 'application', icon: '📋', label: 'Application Profile' },
+  { key: 'notifications', icon: '🔔', label: 'Notifications' },
+  { key: 'privacy', icon: '🔒', label: 'Data & Privacy' },
 ];
 
 const RIGOR_OPTIONS = [
@@ -115,10 +115,23 @@ const FEEDBACK_OPTIONS = [
 
 const ACCENT_COLORS = [
   { name: 'Emerald', value: '#10b981', tw: 'bg-emerald-500' },
+  { name: 'Green', value: '#22c55e', tw: 'bg-green-500' },
+  { name: 'Teal', value: '#14b8a6', tw: 'bg-teal-500' },
+  { name: 'Cyan', value: '#06b6d4', tw: 'bg-cyan-500' },
   { name: 'Blue', value: '#3b82f6', tw: 'bg-blue-500' },
+  { name: 'Indigo', value: '#6366f1', tw: 'bg-indigo-500' },
   { name: 'Purple', value: '#8b5cf6', tw: 'bg-purple-500' },
+  { name: 'Violet', value: '#a78bfa', tw: 'bg-violet-400' },
+  { name: 'Pink', value: '#ec4899', tw: 'bg-pink-500' },
   { name: 'Rose', value: '#f43f5e', tw: 'bg-rose-500' },
+  { name: 'Orange', value: '#f97316', tw: 'bg-orange-500' },
   { name: 'Amber', value: '#f59e0b', tw: 'bg-amber-500' },
+];
+
+const FONT_SIZE_OPTIONS = [
+  { value: 'small', label: 'Small', class: 'text-sm' },
+  { value: 'default', label: 'Default', class: 'text-base' },
+  { value: 'large', label: 'Large', class: 'text-lg' },
 ];
 
 interface NotificationPrefs {
@@ -501,10 +514,10 @@ export default function SettingsPage() {
           )}
         </Card>
 
-        {/* Danger zone */}
+        {/* Account deletion */}
         {!isGuest && (
           <Card className="!border-red-200 dark:!border-red-900/50">
-            <h3 className="text-sm font-semibold text-red-600 dark:text-red-400 mb-2">Danger Zone</h3>
+            <h3 className="text-sm font-semibold text-red-600 dark:text-red-400 mb-2">Delete Account</h3>
             <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">
               Permanently delete your account and all associated data.
             </p>
@@ -620,9 +633,9 @@ export default function SettingsPage() {
   function renderAppearance() {
     const currentMode = getCurrentThemeMode();
     const modes: { value: 'light' | 'dark' | 'system'; label: string; icon: string }[] = [
-      { value: 'light', label: 'Light', icon: '\u2600\uFE0F' },
-      { value: 'dark', label: 'Dark', icon: '\u{1F319}' },
-      { value: 'system', label: 'System', icon: '\u{1F4BB}' },
+      { value: 'light', label: 'Light', icon: '☀️' },
+      { value: 'dark', label: 'Dark', icon: '🌙' },
+      { value: 'system', label: 'System', icon: '💻' },
     ];
 
     return (
@@ -692,7 +705,7 @@ export default function SettingsPage() {
         {/* Accent color */}
         <Card>
           <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Accent Color</h3>
-          <div className="flex gap-3">
+          <div className="grid grid-cols-6 gap-3">
             {ACCENT_COLORS.map(c => (
               <button
                 key={c.value}
@@ -703,15 +716,68 @@ export default function SettingsPage() {
                   c.tw,
                   accentColor === c.value
                     ? 'ring-2 ring-offset-2 ring-gray-900 dark:ring-white dark:ring-offset-gray-800 scale-110'
-                    : 'hover:scale-105'
+                    : 'hover:scale-105 opacity-70 hover:opacity-100'
                 )}
                 title={c.name}
               />
             ))}
           </div>
-          <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">
-            Accent color customization coming soon.
-          </p>
+          {accentColor && (
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-3">
+              Selected: <span className="font-medium">{ACCENT_COLORS.find(c => c.value === accentColor)?.name || 'Emerald'}</span>
+            </p>
+          )}
+        </Card>
+
+        {/* Font size */}
+        <Card>
+          <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Display Size</h3>
+          <div className="grid grid-cols-3 gap-3">
+            {FONT_SIZE_OPTIONS.map(f => (
+              <button
+                key={f.value}
+                type="button"
+                onClick={() => {
+                  try { localStorage.setItem('collegesprout_font_size', f.value); } catch { /* noop */ }
+                }}
+                className={cn(
+                  'flex flex-col items-center gap-1.5 p-3 rounded-xl border-2 transition-all cursor-pointer',
+                  'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
+                )}
+              >
+                <span className={cn('font-medium text-gray-900 dark:text-white', f.class)}>Aa</span>
+                <span className="text-xs text-gray-500 dark:text-gray-400">{f.label}</span>
+              </button>
+            ))}
+          </div>
+        </Card>
+
+        {/* Card style */}
+        <Card>
+          <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Card Style</h3>
+          <div className="grid grid-cols-3 gap-3">
+            {[
+              { value: 'rounded', label: 'Rounded', preview: 'rounded-2xl' },
+              { value: 'sharp', label: 'Sharp', preview: 'rounded-md' },
+              { value: 'pill', label: 'Soft', preview: 'rounded-3xl' },
+            ].map(s => (
+              <button
+                key={s.value}
+                type="button"
+                onClick={() => {
+                  try { localStorage.setItem('collegesprout_card_style', s.value); } catch { /* noop */ }
+                }}
+                className={cn(
+                  'flex flex-col items-center gap-2 p-4 border-2 transition-all cursor-pointer',
+                  s.preview,
+                  'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
+                )}
+              >
+                <div className={cn('w-12 h-8 bg-emerald-500/20 border border-emerald-500/30', s.preview)} />
+                <span className="text-xs text-gray-500 dark:text-gray-400">{s.label}</span>
+              </button>
+            ))}
+          </div>
         </Card>
       </div>
     );
@@ -754,7 +820,7 @@ export default function SettingsPage() {
           <Card className="!p-0 overflow-hidden">
             <SectionHeader
               title={CATEGORY_LABELS.academics}
-              icon="\u{1F4DA}"
+              icon="📚"
               isOpen={openSection === 'academics'}
               onToggle={() => toggleProfileSection('academics')}
               score={getScoreForCategory('academics')}
@@ -790,7 +856,7 @@ export default function SettingsPage() {
           <Card className="!p-0 overflow-hidden">
             <SectionHeader
               title={CATEGORY_LABELS.testing}
-              icon="\u{1F4DD}"
+              icon="📝"
               isOpen={openSection === 'testing'}
               onToggle={() => toggleProfileSection('testing')}
               score={getScoreForCategory('testing')}
@@ -815,7 +881,7 @@ export default function SettingsPage() {
           <Card className="!p-0 overflow-hidden">
             <SectionHeader
               title={CATEGORY_LABELS.activities}
-              icon="\u{1F3C3}"
+              icon="🏃"
               isOpen={openSection === 'activities'}
               onToggle={() => toggleProfileSection('activities')}
               score={getScoreForCategory('activities')}
@@ -883,7 +949,7 @@ export default function SettingsPage() {
           <Card className="!p-0 overflow-hidden">
             <SectionHeader
               title={CATEGORY_LABELS.awards}
-              icon="\u{1F3C6}"
+              icon="🏆"
               isOpen={openSection === 'awards'}
               onToggle={() => toggleProfileSection('awards')}
               score={getScoreForCategory('awards')}
@@ -918,7 +984,7 @@ export default function SettingsPage() {
           <Card className="!p-0 overflow-hidden">
             <SectionHeader
               title={CATEGORY_LABELS.recommendations}
-              icon="\u{1F48C}"
+              icon="💌"
               isOpen={openSection === 'recommendations'}
               onToggle={() => toggleProfileSection('recommendations')}
               score={getScoreForCategory('recommendations')}
@@ -965,38 +1031,51 @@ export default function SettingsPage() {
           <p className="text-sm text-gray-500 dark:text-gray-400">Choose what you want to be notified about.</p>
         </div>
 
-        <Card className="space-y-5">
-          <Toggle
-            label="Deadline reminders"
-            checked={notifications.deadlineReminders}
-            onChange={v => updateNotification('deadlineReminders', v)}
-          />
-          <Toggle
-            label="Weekly progress summary"
-            checked={notifications.weeklyProgress}
-            onChange={v => updateNotification('weeklyProgress', v)}
-          />
-          <Toggle
-            label="Badge earned alerts"
-            checked={notifications.badgeAlerts}
-            onChange={v => updateNotification('badgeAlerts', v)}
-          />
-          <Toggle
-            label="New feature announcements"
-            checked={notifications.featureAnnouncements}
-            onChange={v => updateNotification('featureAnnouncements', v)}
-          />
-          <Toggle
-            label="Application tips"
-            checked={notifications.applicationTips}
-            onChange={v => updateNotification('applicationTips', v)}
-          />
+        <Card className="divide-y divide-gray-100 dark:divide-gray-700">
+          <div className="flex items-center justify-between py-4 first:pt-0">
+            <div>
+              <p className="text-sm font-semibold text-gray-900 dark:text-white">📅 Deadline Reminders</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Get notified before college application deadlines</p>
+            </div>
+            <Toggle label="" checked={notifications.deadlineReminders} onChange={v => updateNotification('deadlineReminders', v)} />
+          </div>
+          <div className="flex items-center justify-between py-4">
+            <div>
+              <p className="text-sm font-semibold text-gray-900 dark:text-white">📊 Weekly Progress Summary</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">A weekly recap of your application progress and score changes</p>
+            </div>
+            <Toggle label="" checked={notifications.weeklyProgress} onChange={v => updateNotification('weeklyProgress', v)} />
+          </div>
+          <div className="flex items-center justify-between py-4">
+            <div>
+              <p className="text-sm font-semibold text-gray-900 dark:text-white">🏅 Badge Earned Alerts</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Celebrate when you unlock a new achievement badge</p>
+            </div>
+            <Toggle label="" checked={notifications.badgeAlerts} onChange={v => updateNotification('badgeAlerts', v)} />
+          </div>
+          <div className="flex items-center justify-between py-4">
+            <div>
+              <p className="text-sm font-semibold text-gray-900 dark:text-white">✨ New Feature Announcements</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Stay updated on new CollegeSprout features and improvements</p>
+            </div>
+            <Toggle label="" checked={notifications.featureAnnouncements} onChange={v => updateNotification('featureAnnouncements', v)} />
+          </div>
+          <div className="flex items-center justify-between py-4 last:pb-0">
+            <div>
+              <p className="text-sm font-semibold text-gray-900 dark:text-white">💡 Application Tips</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Helpful tips and advice to strengthen your college applications</p>
+            </div>
+            <Toggle label="" checked={notifications.applicationTips} onChange={v => updateNotification('applicationTips', v)} />
+          </div>
         </Card>
 
         <Card className="!bg-blue-50 dark:!bg-blue-900/20 !border-blue-200 dark:!border-blue-800">
-          <p className="text-sm text-blue-700 dark:text-blue-300">
-            Email notifications coming soon. These preferences will apply once email notifications are enabled.
-          </p>
+          <div className="flex items-center gap-2">
+            <span className="text-lg">📧</span>
+            <p className="text-sm font-medium text-blue-800 dark:text-blue-200">
+              Email notifications coming soon! These preferences will apply once email notifications are enabled.
+            </p>
+          </div>
         </Card>
       </div>
     );
@@ -1033,9 +1112,9 @@ export default function SettingsPage() {
           </Button>
         </Card>
 
-        {/* Danger zone */}
+        {/* Data management */}
         <Card className="!border-red-200 dark:!border-red-900/50 space-y-4">
-          <h3 className="text-sm font-semibold text-red-600 dark:text-red-400">Danger Zone</h3>
+          <h3 className="text-sm font-semibold text-red-600 dark:text-red-400">Reset & Clear Data</h3>
 
           {/* Reset profile */}
           <div className="space-y-2">
