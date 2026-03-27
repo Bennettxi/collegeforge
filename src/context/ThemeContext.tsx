@@ -18,7 +18,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   // Load saved theme on mount
   useEffect(() => {
     try {
-      const saved = localStorage.getItem('collegeforge_theme') as Theme | null;
+      const saved = localStorage.getItem('collegesprout_theme') as Theme | null;
       if (saved === 'dark' || saved === 'light') {
         setTheme(saved);
         document.documentElement.classList.toggle('dark', saved === 'dark');
@@ -36,7 +36,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       const next = prev === 'light' ? 'dark' : 'light';
       document.documentElement.classList.toggle('dark', next === 'dark');
       try {
-        localStorage.setItem('collegeforge_theme', next);
+        localStorage.setItem('collegesprout_theme', next);
       } catch {
         // localStorage unavailable
       }

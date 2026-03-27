@@ -15,7 +15,7 @@ export function Navbar() {
           href="/"
           className="text-xl font-bold bg-gradient-to-r from-emerald-600 to-green-500 bg-clip-text text-transparent"
         >
-          CollegeForge
+          CollegeSprout
         </Link>
         <div className="flex items-center gap-3">
           <ThemeToggle />

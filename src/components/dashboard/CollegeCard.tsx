@@ -7,6 +7,7 @@ import { MatchBadge } from '@/components/dashboard/MatchBadge';
 import { cn } from '@/lib/utils';
 import { College, CollegeTier, ApplicationStatus, TIER_CONFIG, STATUS_CONFIG } from '@/types/college';
 import { useCollegeMatchByName } from '@/hooks/useCollegeMatch';
+import { estimateAcceptanceProbability, getProbabilityColor, getProbabilityLabel } from '@/lib/colleges/probability';
 
 interface CollegeCardProps {
   college: College;
@@ -80,7 +81,7 @@ export function CollegeCard({ college, onUpdateStatus, onDelete }: CollegeCardPr
 
         {/* Match indicator */}
         {match && (
-          <div>
+          <div className="flex items-center gap-2 flex-wrap">
             <button
               type="button"
               onClick={() => setShowMatchDetails(!showMatchDetails)}
@@ -88,6 +89,22 @@ export function CollegeCard({ college, onUpdateStatus, onDelete }: CollegeCardPr
             >
               <MatchBadge match={match} showDetails={showMatchDetails} />
             </button>
+            {(() => {
+              const probability = estimateAcceptanceProbability(match.matchScore, match.college.acceptanceRate);
+              const colorClass = getProbabilityColor(probability);
+              const label = getProbabilityLabel(probability);
+              return (
+                <span
+                  className={cn(
+                    'inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium',
+                    'bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600',
+                    colorClass
+                  )}
+                >
+                  ~{probability}% chance &middot; {label}
+                </span>
+              );
+            })()}
           </div>
         )}
 

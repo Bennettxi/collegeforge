@@ -12,8 +12,10 @@ import { cn } from '@/lib/utils';
 const NAV_ITEMS = [
   { label: 'Overview', path: '/dashboard', icon: '📊' },
   { label: 'Colleges', path: '/dashboard/colleges', icon: '🏛️' },
+  { label: 'Simulator', path: '/dashboard/simulator', icon: '🔮' },
+  { label: 'Calendar', path: '/dashboard/calendar', icon: '📅' },
   { label: 'Essays', path: '/dashboard/essays', icon: '📝' },
-  { label: 'Timeline', path: '/dashboard/timeline', icon: '📅' },
+  { label: 'Documents', path: '/dashboard/documents', icon: '📁' },
   { label: 'Badges', path: '/dashboard/badges', icon: '🏅' },
   { label: 'Share', path: '/dashboard/share', icon: '🎴' },
   { label: 'Profile', path: '/dashboard/settings', icon: '⚙️' },
@@ -24,8 +26,8 @@ const NAV_ITEMS = [
 const MOBILE_NAV = [
   { label: 'Overview', path: '/dashboard', icon: '📊' },
   { label: 'Colleges', path: '/dashboard/colleges', icon: '🏛️' },
-  { label: 'Essays', path: '/dashboard/essays', icon: '📝' },
-  { label: 'Badges', path: '/dashboard/badges', icon: '🏅' },
+  { label: 'Simulator', path: '/dashboard/simulator', icon: '🔮' },
+  { label: 'Docs', path: '/dashboard/documents', icon: '📁' },
   { label: 'Profile', path: '/dashboard/settings', icon: '⚙️' },
 ];
 
@@ -53,7 +55,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
           <div className="flex items-center gap-3">
             <Link href="/" className="text-xl font-bold bg-gradient-to-r from-emerald-600 to-green-500 bg-clip-text text-transparent hover:opacity-80 transition-opacity">
-              CollegeForge
+              CollegeSprout
             </Link>
             <SaveIndicator />
           </div>

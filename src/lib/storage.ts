@@ -1,6 +1,6 @@
 import { StudentProfile, createEmptyProfile } from '@/types/profile';
 
-const STORAGE_KEY = 'collegeforge_profile';
+const STORAGE_KEY = 'collegesprout_profile';
 const STORAGE_VERSION = 1;
 
 interface StorageWrapper {

@@ -28,7 +28,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         href="/"
         className="text-2xl font-bold bg-gradient-to-r from-emerald-600 to-green-500 bg-clip-text text-transparent mb-8"
       >
-        CollegeForge
+        CollegeSprout
       </Link>
       <div className="w-full max-w-md">{children}</div>
     </div>

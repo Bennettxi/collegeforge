@@ -51,7 +51,7 @@ export function FeatureCards() {
           Everything You Need to Stand Out
         </h2>
         <p className="text-gray-500 dark:text-gray-400 text-center mb-12 max-w-xl mx-auto">
-          CollegeForge breaks down your application into clear, actionable areas so you know exactly where to focus.
+          CollegeSprout breaks down your application into clear, actionable areas so you know exactly where to focus.
         </p>
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
           {features.map((f, i) => (

@@ -12,13 +12,16 @@ import { InsightsCards } from '@/components/dashboard/InsightsCards';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { DashboardSkeleton } from '@/components/ui/Skeleton';
+import { StreakBanner } from '@/components/dashboard/StreakBanner';
 
 const QUICK_ACTIONS = [
   { label: 'Edit Profile', href: '/dashboard/settings', icon: '✏️' },
   { label: 'Add College', href: '/dashboard/colleges', icon: '🏛️' },
+  { label: 'What If?', href: '/dashboard/simulator', icon: '🔮' },
+  { label: 'Calendar', href: '/dashboard/calendar', icon: '📅' },
+  { label: 'Documents', href: '/dashboard/documents', icon: '📁' },
   { label: 'Essay Coach', href: '/dashboard/essays', icon: '📝' },
   { label: 'Share Card', href: '/dashboard/share', icon: '🎴' },
-  { label: 'View Timeline', href: '/dashboard/timeline', icon: '📅' },
   { label: 'See Badges', href: '/dashboard/badges', icon: '🏅' },
 ];
 
@@ -42,8 +45,11 @@ export default function DashboardPage() {
         <AvatarDisplay />
       </div>
 
+      {/* Streak Banner */}
+      <StreakBanner />
+
       {/* Quick Actions */}
-      <div className="grid grid-cols-3 md:grid-cols-6 gap-2 md:gap-3">
+      <div className="grid grid-cols-4 md:grid-cols-8 gap-2 md:gap-3">
         {QUICK_ACTIONS.map(action => (
           <Link key={action.href} href={action.href}>
             <Card

@@ -3,7 +3,7 @@
 import { createContext, useContext, useState, useEffect, useCallback, useRef, ReactNode } from 'react';
 import { College } from '@/types/college';
 
-const STORAGE_KEY = 'collegeforge_colleges';
+const STORAGE_KEY = 'collegesprout_colleges';
 
 interface CollegeContextValue {
   colleges: College[];

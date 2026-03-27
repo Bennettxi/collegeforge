@@ -1,4 +1,4 @@
--- CollegeForge Supabase Schema
+-- CollegeSprout Supabase Schema
 -- Run this in your Supabase Dashboard > SQL Editor
 
 -- 1. Create the profiles table

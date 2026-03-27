@@ -4,6 +4,8 @@ import { ThemeProvider } from "@/context/ThemeContext";
 import { AuthProvider } from "@/context/AuthContext";
 import { ProfileProvider } from "@/context/ProfileContext";
 import { CollegeProvider } from "@/context/CollegeContext";
+import { StreakProvider } from "@/context/StreakContext";
+import { DocumentProvider } from "@/context/DocumentContext";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -12,7 +14,7 @@ const geistSans = Geist({
 });
 
 export const metadata: Metadata = {
-  title: "CollegeForge — Build Your Strongest College Application",
+  title: "CollegeSprout — Build Your Strongest College Application",
   description: "Track your progress, level up your avatar, and get personalized recommendations to stand out in college admissions.",
 };
 
@@ -26,7 +28,7 @@ export default function RootLayout({
       <head>
         <script dangerouslySetInnerHTML={{ __html: `
           try {
-            const t = localStorage.getItem('collegeforge_theme');
+            const t = localStorage.getItem('collegesprout_theme');
             if (t === 'dark' || (!t && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
               document.documentElement.classList.add('dark');
             }
@@ -38,7 +40,11 @@ export default function RootLayout({
           <AuthProvider>
             <ProfileProvider>
               <CollegeProvider>
-                {children}
+                <StreakProvider>
+                  <DocumentProvider>
+                    {children}
+                  </DocumentProvider>
+                </StreakProvider>
               </CollegeProvider>
             </ProfileProvider>
           </AuthProvider>

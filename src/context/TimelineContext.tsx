@@ -3,7 +3,7 @@
 import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import { TimelineEvent } from '@/types/timeline';
 
-const STORAGE_KEY = 'collegeforge_timeline';
+const STORAGE_KEY = 'collegesprout_timeline';
 
 interface TimelineContextValue {
   events: TimelineEvent[];

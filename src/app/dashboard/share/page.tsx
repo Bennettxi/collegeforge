@@ -144,11 +144,11 @@ export default function SharePage() {
       ctx.arc(80, 480, 100, 0, Math.PI * 2);
       ctx.fill();
 
-      // Header: CollegeForge
+      // Header: CollegeSprout
       ctx.fillStyle = 'rgba(255,255,255,0.6)';
       ctx.font = '600 12px system-ui, -apple-system, sans-serif';
       ctx.textAlign = 'left';
-      ctx.fillText('COLLEGEFORGE', 32, 40);
+      ctx.fillText('COLLEGESPROUT', 32, 40);
 
       // Tree emoji + level
       ctx.font = '48px system-ui';
@@ -270,12 +270,12 @@ export default function SharePage() {
       ctx.fillStyle = 'rgba(255,255,255,0.3)';
       ctx.font = '10px system-ui, -apple-system, sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText('Made with CollegeForge — collegeforge.app', 220, cardHeight - 20);
+      ctx.fillText('Made with CollegeSprout — collegesprout.app', 220, cardHeight - 20);
 
       // Download
       const dataUrl = canvas.toDataURL('image/png');
       const link = document.createElement('a');
-      link.download = `collegeforge-profile-${avatarLevel.name.toLowerCase().replace(/\s+/g, '-')}.png`;
+      link.download = `collegesprout-profile-${avatarLevel.name.toLowerCase().replace(/\s+/g, '-')}.png`;
       link.href = dataUrl;
       link.click();
     } catch {
@@ -289,7 +289,7 @@ export default function SharePage() {
   // Copy stats to clipboard
   const handleCopyStats = useCallback(() => {
     const lines = [
-      `🌳 CollegeForge Profile`,
+      `🌱 CollegeSprout Profile`,
       ``,
       `${treeEmoji} Level: ${avatarLevel.name}`,
       `📊 Overall Score: ${scores?.total ? Math.round(scores.total) : 0}/100`,
@@ -300,7 +300,7 @@ export default function SharePage() {
       `🏅 Badges: ${earnedCount}/${totalCount} earned`,
       `🏛️ Colleges: ${colleges.length} on list`,
       ``,
-      `— Made with CollegeForge`,
+      `— Made with CollegeSprout`,
     ];
 
     navigator.clipboard.writeText(lines.join('\n')).then(() => {
@@ -381,7 +381,7 @@ export default function SharePage() {
             <div className="relative z-10">
               {/* Logo */}
               <p className="text-xs font-semibold text-white/60 uppercase tracking-[0.2em] mb-6">
-                CollegeForge
+                CollegeSprout
               </p>
 
               {/* Avatar & Level */}
@@ -467,7 +467,7 @@ export default function SharePage() {
 
               {/* Footer */}
               <p className="text-center text-[10px] text-white/25 mt-6">
-                Made with CollegeForge
+                Made with CollegeSprout
               </p>
             </div>
           </div>
