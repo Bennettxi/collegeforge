@@ -340,11 +340,6 @@ export default function SimulatorPage() {
                       {slider.label}
                     </label>
                     <div className="flex items-center gap-2">
-                      {isChanged && (
-                        <span className="text-xs text-gray-400 dark:text-gray-500 line-through">
-                          {slider.format(originalVal)}
-                        </span>
-                      )}
                       <span className={cn(
                         'text-sm font-semibold tabular-nums',
                         isChanged
@@ -353,6 +348,11 @@ export default function SimulatorPage() {
                       )}>
                         {slider.format(currentVal)}
                       </span>
+                      {isChanged && (
+                        <span className="text-[10px] text-gray-400 dark:text-gray-500">
+                          (was {slider.format(originalVal)})
+                        </span>
+                      )}
                       {isChanged && (
                         <button
                           onClick={() => resetSlider(slider.key)}

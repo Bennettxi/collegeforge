@@ -14,6 +14,7 @@ import { cn } from '@/lib/utils';
 import { CollegeTier, ApplicationStatus, TIER_CONFIG } from '@/types/college';
 import { searchColleges, CollegeStats } from '@/lib/colleges/data';
 import { calculateMatch } from '@/lib/colleges/matcher';
+import { getDeadlinesForCollege } from '@/lib/colleges/deadlines';
 
 const TIER_OPTIONS = [
   { value: 'reach', label: 'Reach' },
@@ -84,6 +85,16 @@ export default function CollegesPage() {
     if (profileLoaded) {
       const match = calculateMatch(profile, college);
       setFormTier(match.suggestedTier);
+    }
+
+    // Auto-fill deadline from deadlines database (use RD deadline as default)
+    const deadlines = getDeadlinesForCollege(college.name);
+    const rdDeadline = deadlines.find(d => d.type === 'RD');
+    const firstDeadline = deadlines[0];
+    if (rdDeadline) {
+      setFormDeadline(rdDeadline.date);
+    } else if (firstDeadline) {
+      setFormDeadline(firstDeadline.date);
     }
   }
 

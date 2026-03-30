@@ -201,7 +201,7 @@ function SectionHeader({
 export default function SettingsPage() {
   const { profile, updateSection, resetProfile, isLoaded } = useProfile();
   const { user, isGuest, signOut } = useAuth();
-  const { theme, toggleTheme, isDark } = useTheme();
+  const { theme, themeMode, setThemeMode, isDark, accentColor, setAccentColor, fontSize, setFontSize, cardStyle, setCardStyle } = useTheme();
   const { tier, isPremium, upgradeToPremium, downgradeToFree } = useSubscription();
   const scores = useScores();
 
@@ -221,37 +221,7 @@ export default function SettingsPage() {
     try { localStorage.setItem('collegesprout_display_name', name); } catch { /* noop */ }
   }
 
-  // ─── Appearance state ─────────────────────────────────────────
-  const [accentColor, setAccentColor] = useState('#10b981');
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem('collegesprout_accent_color');
-      if (saved) setAccentColor(saved);
-    } catch { /* noop */ }
-  }, []);
-  function saveAccent(color: string) {
-    setAccentColor(color);
-    try { localStorage.setItem('collegesprout_accent_color', color); } catch { /* noop */ }
-  }
-
-  function setThemeMode(mode: 'light' | 'dark' | 'system') {
-    if (mode === 'system') {
-      try { localStorage.removeItem('collegesprout_theme'); } catch { /* noop */ }
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      document.documentElement.classList.toggle('dark', prefersDark);
-    } else {
-      if ((mode === 'dark') !== isDark) toggleTheme();
-    }
-  }
-
-  function getCurrentThemeMode(): 'light' | 'dark' | 'system' {
-    try {
-      const saved = localStorage.getItem('collegesprout_theme');
-      if (saved === 'light') return 'light';
-      if (saved === 'dark') return 'dark';
-    } catch { /* noop */ }
-    return 'system';
-  }
+  // Appearance state now comes from ThemeContext
 
   // ─── Notifications state ──────────────────────────────────────
   const [notifications, setNotifications] = useState<NotificationPrefs>(DEFAULT_NOTIFICATIONS);
@@ -595,10 +565,10 @@ export default function SettingsPage() {
                 )}>
                   <td className="p-3 text-gray-700 dark:text-gray-300">{f.name}</td>
                   <td className="p-3 text-center text-gray-500 dark:text-gray-400">
-                    {typeof f.free === 'boolean' ? (f.free ? '\u2705' : '\u274C') : f.free}
+                    {typeof f.free === 'boolean' ? (f.free ? '✅' : '❌') : f.free}
                   </td>
                   <td className="p-3 text-center text-gray-900 dark:text-white font-medium">
-                    {typeof f.premium === 'boolean' ? (f.premium ? '\u2705' : '\u274C') : f.premium}
+                    {typeof f.premium === 'boolean' ? (f.premium ? '✅' : '❌') : f.premium}
                   </td>
                 </tr>
               ))}
@@ -631,11 +601,16 @@ export default function SettingsPage() {
   }
 
   function renderAppearance() {
-    const currentMode = getCurrentThemeMode();
     const modes: { value: 'light' | 'dark' | 'system'; label: string; icon: string }[] = [
       { value: 'light', label: 'Light', icon: '☀️' },
       { value: 'dark', label: 'Dark', icon: '🌙' },
       { value: 'system', label: 'System', icon: '💻' },
+    ];
+
+    const cardStyles = [
+      { value: 'rounded', label: 'Rounded', preview: 'rounded-2xl' },
+      { value: 'sharp', label: 'Sharp', preview: 'rounded-md' },
+      { value: 'pill', label: 'Soft', preview: 'rounded-3xl' },
     ];
 
     return (
@@ -656,7 +631,7 @@ export default function SettingsPage() {
                 onClick={() => setThemeMode(m.value)}
                 className={cn(
                   'flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all cursor-pointer',
-                  currentMode === m.value
+                  themeMode === m.value
                     ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20'
                     : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
                 )}
@@ -664,7 +639,7 @@ export default function SettingsPage() {
                 <span className="text-2xl">{m.icon}</span>
                 <span className={cn(
                   'text-sm font-medium',
-                  currentMode === m.value
+                  themeMode === m.value
                     ? 'text-emerald-700 dark:text-emerald-400'
                     : 'text-gray-600 dark:text-gray-400'
                 )}>
@@ -696,7 +671,7 @@ export default function SettingsPage() {
               <div className={cn('h-2 w-3/4 rounded', isDark ? 'bg-gray-700' : 'bg-gray-200')} />
             </div>
             <div className="mt-3 flex gap-2">
-              <div className="h-6 w-16 rounded-lg bg-emerald-500" />
+              <div className="h-6 w-16 rounded-lg" style={{ backgroundColor: accentColor }} />
               <div className={cn('h-6 w-16 rounded-lg border', isDark ? 'border-gray-600' : 'border-gray-300')} />
             </div>
           </div>
@@ -710,7 +685,7 @@ export default function SettingsPage() {
               <button
                 key={c.value}
                 type="button"
-                onClick={() => saveAccent(c.value)}
+                onClick={() => setAccentColor(c.value)}
                 className={cn(
                   'w-10 h-10 rounded-full transition-all cursor-pointer',
                   c.tw,
@@ -737,16 +712,16 @@ export default function SettingsPage() {
               <button
                 key={f.value}
                 type="button"
-                onClick={() => {
-                  try { localStorage.setItem('collegesprout_font_size', f.value); } catch { /* noop */ }
-                }}
+                onClick={() => setFontSize(f.value)}
                 className={cn(
                   'flex flex-col items-center gap-1.5 p-3 rounded-xl border-2 transition-all cursor-pointer',
-                  'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
+                  fontSize === f.value
+                    ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20'
+                    : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
                 )}
               >
-                <span className={cn('font-medium text-gray-900 dark:text-white', f.class)}>Aa</span>
-                <span className="text-xs text-gray-500 dark:text-gray-400">{f.label}</span>
+                <span className={cn('font-medium', f.class, fontSize === f.value ? 'text-emerald-700 dark:text-emerald-400' : 'text-gray-900 dark:text-white')}>Aa</span>
+                <span className={cn('text-xs', fontSize === f.value ? 'text-emerald-600 dark:text-emerald-400' : 'text-gray-500 dark:text-gray-400')}>{f.label}</span>
               </button>
             ))}
           </div>
@@ -756,25 +731,21 @@ export default function SettingsPage() {
         <Card>
           <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Card Style</h3>
           <div className="grid grid-cols-3 gap-3">
-            {[
-              { value: 'rounded', label: 'Rounded', preview: 'rounded-2xl' },
-              { value: 'sharp', label: 'Sharp', preview: 'rounded-md' },
-              { value: 'pill', label: 'Soft', preview: 'rounded-3xl' },
-            ].map(s => (
+            {cardStyles.map(s => (
               <button
                 key={s.value}
                 type="button"
-                onClick={() => {
-                  try { localStorage.setItem('collegesprout_card_style', s.value); } catch { /* noop */ }
-                }}
+                onClick={() => setCardStyle(s.value)}
                 className={cn(
                   'flex flex-col items-center gap-2 p-4 border-2 transition-all cursor-pointer',
                   s.preview,
-                  'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
+                  cardStyle === s.value
+                    ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20'
+                    : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
                 )}
               >
-                <div className={cn('w-12 h-8 bg-emerald-500/20 border border-emerald-500/30', s.preview)} />
-                <span className="text-xs text-gray-500 dark:text-gray-400">{s.label}</span>
+                <div className={cn('w-12 h-8 border', s.preview, cardStyle === s.value ? 'bg-emerald-500/30 border-emerald-500/50' : 'bg-emerald-500/20 border-emerald-500/30')} />
+                <span className={cn('text-xs', cardStyle === s.value ? 'text-emerald-600 dark:text-emerald-400' : 'text-gray-500 dark:text-gray-400')}>{s.label}</span>
               </button>
             ))}
           </div>
@@ -921,7 +892,7 @@ export default function SettingsPage() {
           <Card className="!p-0 overflow-hidden">
             <SectionHeader
               title={CATEGORY_LABELS.essays}
-              icon="\u270D\uFE0F"
+              icon="✏️"
               isOpen={openSection === 'essays'}
               onToggle={() => toggleProfileSection('essays')}
               score={getScoreForCategory('essays')}
@@ -1035,35 +1006,35 @@ export default function SettingsPage() {
           <div className="flex items-center justify-between py-4 first:pt-0">
             <div>
               <p className="text-sm font-semibold text-gray-900 dark:text-white">📅 Deadline Reminders</p>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Get notified before college application deadlines</p>
+              <p className="text-sm text-gray-600 dark:text-gray-300 mt-0.5">Get notified before college application deadlines</p>
             </div>
             <Toggle label="" checked={notifications.deadlineReminders} onChange={v => updateNotification('deadlineReminders', v)} />
           </div>
           <div className="flex items-center justify-between py-4">
             <div>
               <p className="text-sm font-semibold text-gray-900 dark:text-white">📊 Weekly Progress Summary</p>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">A weekly recap of your application progress and score changes</p>
+              <p className="text-sm text-gray-600 dark:text-gray-300 mt-0.5">A weekly recap of your application progress and score changes</p>
             </div>
             <Toggle label="" checked={notifications.weeklyProgress} onChange={v => updateNotification('weeklyProgress', v)} />
           </div>
           <div className="flex items-center justify-between py-4">
             <div>
               <p className="text-sm font-semibold text-gray-900 dark:text-white">🏅 Badge Earned Alerts</p>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Celebrate when you unlock a new achievement badge</p>
+              <p className="text-sm text-gray-600 dark:text-gray-300 mt-0.5">Celebrate when you unlock a new achievement badge</p>
             </div>
             <Toggle label="" checked={notifications.badgeAlerts} onChange={v => updateNotification('badgeAlerts', v)} />
           </div>
           <div className="flex items-center justify-between py-4">
             <div>
               <p className="text-sm font-semibold text-gray-900 dark:text-white">✨ New Feature Announcements</p>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Stay updated on new CollegeSprout features and improvements</p>
+              <p className="text-sm text-gray-600 dark:text-gray-300 mt-0.5">Stay updated on new CollegeSprout features and improvements</p>
             </div>
             <Toggle label="" checked={notifications.featureAnnouncements} onChange={v => updateNotification('featureAnnouncements', v)} />
           </div>
           <div className="flex items-center justify-between py-4 last:pb-0">
             <div>
               <p className="text-sm font-semibold text-gray-900 dark:text-white">💡 Application Tips</p>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Helpful tips and advice to strengthen your college applications</p>
+              <p className="text-sm text-gray-600 dark:text-gray-300 mt-0.5">Helpful tips and advice to strengthen your college applications</p>
             </div>
             <Toggle label="" checked={notifications.applicationTips} onChange={v => updateNotification('applicationTips', v)} />
           </div>

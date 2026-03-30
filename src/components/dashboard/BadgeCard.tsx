@@ -35,7 +35,7 @@ export function BadgeCard({ badge, earned }: BadgeCardProps) {
       {/* Lock overlay for unearned badges */}
       {!earned && (
         <div className="absolute top-3 right-3 text-sm text-gray-400 dark:text-gray-600">
-          {'\u{1F512}'}
+          {'🔒'}
         </div>
       )}
 

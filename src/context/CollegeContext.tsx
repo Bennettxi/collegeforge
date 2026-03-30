@@ -37,30 +37,26 @@ function saveColleges(colleges: College[]): void {
 export function CollegeProvider({ children }: { children: ReactNode }) {
   const [colleges, setColleges] = useState<College[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
-  const saveTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
-  const isInitialLoad = useRef(true);
+  const collegesRef = useRef<College[]>([]);
 
   // Load from localStorage on mount
   useEffect(() => {
     const saved = loadColleges();
     setColleges(saved);
+    collegesRef.current = saved;
     setIsLoaded(true);
-    isInitialLoad.current = false;
   }, []);
 
-  // Save to localStorage on changes (debounced)
-  useEffect(() => {
-    if (!isLoaded || isInitialLoad.current) return;
-
-    if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
-    saveTimerRef.current = setTimeout(() => {
-      saveColleges(colleges);
-    }, 300);
-
-    return () => {
-      if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
-    };
-  }, [colleges, isLoaded]);
+  // Helper to update state and persist
+  const persistColleges = useCallback((updater: (prev: College[]) => College[]) => {
+    setColleges(prev => {
+      const next = updater(prev);
+      collegesRef.current = next;
+      // Save synchronously so data persists immediately
+      saveColleges(next);
+      return next;
+    });
+  }, []);
 
   const addCollege = useCallback((college: Omit<College, 'id' | 'addedAt'>) => {
     const newCollege: College = {
@@ -68,18 +64,18 @@ export function CollegeProvider({ children }: { children: ReactNode }) {
       id: crypto.randomUUID(),
       addedAt: new Date().toISOString(),
     };
-    setColleges(prev => [newCollege, ...prev]);
-  }, []);
+    persistColleges(prev => [newCollege, ...prev]);
+  }, [persistColleges]);
 
   const updateCollege = useCallback((id: string, updates: Partial<Omit<College, 'id' | 'addedAt'>>) => {
-    setColleges(prev =>
+    persistColleges(prev =>
       prev.map(c => (c.id === id ? { ...c, ...updates } : c))
     );
-  }, []);
+  }, [persistColleges]);
 
   const removeCollege = useCallback((id: string) => {
-    setColleges(prev => prev.filter(c => c.id !== id));
-  }, []);
+    persistColleges(prev => prev.filter(c => c.id !== id));
+  }, [persistColleges]);
 
   return (
     <CollegeContext.Provider value={{ colleges, addCollege, updateCollege, removeCollege, isLoaded }}>
