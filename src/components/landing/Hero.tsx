@@ -5,9 +5,9 @@ import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/Button';
 
 const STATS = [
-  { label: 'Score Categories', value: 6 },
-  { label: 'Colleges in Database', value: 80 },
-  { label: 'Badges to Earn', value: 15 },
+  { label: 'Score Categories', value: 6, accent: 'border-indigo-500' },
+  { label: 'Colleges in Database', value: 80, accent: 'border-violet-500' },
+  { label: 'Badges to Earn', value: 15, accent: 'border-emerald-500' },
 ];
 
 function AnimatedNumber({ target, duration = 1500 }: { target: number; duration?: number }) {
@@ -17,7 +17,7 @@ function AnimatedNumber({ target, duration = 1500 }: { target: number; duration?
     const timer = setInterval(() => {
       const elapsed = Date.now() - start;
       const progress = Math.min(elapsed / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+      const eased = 1 - Math.pow(1 - progress, 3);
       setCurrent(Math.round(eased * target));
       if (progress >= 1) clearInterval(timer);
     }, 30);
@@ -28,23 +28,46 @@ function AnimatedNumber({ target, duration = 1500 }: { target: number; duration?
 
 export function Hero() {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-emerald-50 via-white to-green-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800 pt-32 pb-24">
-      {/* Animated background blobs */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-96 h-96 bg-emerald-200/30 dark:bg-emerald-900/20 rounded-full blur-3xl animate-float-slow" />
-        <div className="absolute -bottom-20 -left-20 w-80 h-80 bg-green-200/20 dark:bg-green-900/15 rounded-full blur-3xl animate-float-slower" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-emerald-100/10 dark:bg-emerald-800/5 rounded-full blur-3xl" />
+    <section className="relative overflow-hidden mesh-hero pt-32 pb-24">
+      {/* Floating orbital decorations */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {/* Orbiting circles */}
+        <div
+          className="absolute top-1/4 left-1/4 w-3 h-3 bg-indigo-500/40 rounded-full animate-orbit"
+          style={{ animationDuration: '12s', animationDelay: '0s' }}
+        />
+        <div
+          className="absolute top-1/3 right-1/4 w-2 h-2 bg-violet-500/50 rounded-full animate-orbit"
+          style={{ animationDuration: '18s', animationDelay: '2s' }}
+        />
+        <div
+          className="absolute bottom-1/3 left-1/3 w-4 h-4 bg-emerald-500/30 rounded-full animate-orbit"
+          style={{ animationDuration: '15s', animationDelay: '5s' }}
+        />
+        <div
+          className="absolute top-1/2 right-1/3 w-2.5 h-2.5 bg-indigo-400/35 rounded-full animate-orbit"
+          style={{ animationDuration: '20s', animationDelay: '8s' }}
+        />
+        <div
+          className="absolute bottom-1/4 right-1/4 w-3.5 h-3.5 bg-violet-400/25 rounded-full animate-orbit"
+          style={{ animationDuration: '14s', animationDelay: '3s' }}
+        />
+
+        {/* Pulsing rings */}
+        <div className="absolute top-20 right-[15%] w-32 h-32 rounded-full border border-indigo-500/20 animate-pulse-ring" />
+        <div className="absolute bottom-32 left-[10%] w-48 h-48 rounded-full border border-violet-500/15 animate-pulse-ring" style={{ animationDelay: '2s' }} />
+        <div className="absolute top-1/2 right-[8%] w-24 h-24 rounded-full border border-emerald-500/20 animate-pulse-ring" style={{ animationDelay: '4s' }} />
       </div>
 
       <div className="relative max-w-4xl mx-auto px-6 text-center">
-        <div className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-100 dark:bg-emerald-900/40 rounded-full text-emerald-700 dark:text-emerald-400 text-sm font-medium mb-8 animate-slide-down-fade">
-          <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
+        <div className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-100 dark:bg-indigo-900/40 rounded-full text-indigo-700 dark:text-indigo-400 text-sm font-medium mb-8 animate-slide-down-fade">
+          <span className="w-2 h-2 bg-indigo-500 rounded-full animate-pulse" />
           Free college app analyzer
         </div>
 
         <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 dark:text-white tracking-tight mb-6">
           Build Your Strongest{' '}
-          <span className="bg-gradient-to-r from-emerald-600 via-green-500 to-teal-500 bg-clip-text text-transparent">
+          <span className="text-brand">
             College Application
           </span>
         </h1>
@@ -56,24 +79,27 @@ export function Hero() {
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
           <Link href="/onboarding">
-            <Button size="lg" className="text-lg px-10 shadow-xl shadow-emerald-500/20">
+            <Button size="lg" className="bg-gradient-to-r from-indigo-500 to-violet-500 hover:from-indigo-600 hover:to-violet-600 text-white border-0 text-lg px-10 shadow-xl shadow-indigo-500/25">
               Start Building →
             </Button>
           </Link>
           <Link href="/dashboard">
-            <Button variant="secondary" size="lg" className="text-lg px-8">
+            <Button variant="secondary" size="lg" className="glass text-lg px-8 backdrop-blur-md">
               View Demo
             </Button>
           </Link>
         </div>
 
-        {/* Animated stats */}
-        <div className="flex items-center justify-center gap-8 md:gap-16">
+        {/* Animated stats in glass cards */}
+        <div className="flex items-center justify-center gap-6 md:gap-10">
           {STATS.map((stat, i) => (
-            <div key={i} className="text-center">
+            <div
+              key={i}
+              className={`glass-card rounded-2xl px-6 py-4 text-center border-t-2 ${stat.accent}`}
+            >
               <p className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">
                 <AnimatedNumber target={stat.value} duration={1200 + i * 300} />
-                <span className="text-emerald-500">+</span>
+                <span className="text-indigo-500">+</span>
               </p>
               <p className="text-xs md:text-sm text-gray-500 dark:text-gray-400 mt-1">{stat.label}</p>
             </div>
