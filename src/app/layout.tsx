@@ -36,7 +36,7 @@ export default function RootLayout({
           } catch(e) {}
         `}} />
       </head>
-      <body className={`${geistSans.variable} font-sans antialiased bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors`}>
+      <body className={`${geistSans.variable} font-sans antialiased bg-[#fafbfe] dark:bg-[#0f0f1a] text-gray-900 dark:text-gray-100 transition-colors`}>
         <ThemeProvider>
           <AuthProvider>
             <ProfileProvider>
