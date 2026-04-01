@@ -8,7 +8,7 @@ interface ProgressBarProps {
 }
 
 function getBarColor(pct: number): string {
-  if (pct >= 85) return 'bg-gradient-to-r from-indigo-500 to-violet-500 shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)]';
+  if (pct >= 85) return 'bg-brand-gradient shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)]';
   if (pct >= 70) return 'bg-gradient-to-r from-blue-500 to-indigo-500 shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)]';
   if (pct >= 50) return 'bg-gradient-to-r from-emerald-500 to-teal-500 shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)]';
   if (pct >= 30) return 'bg-gradient-to-r from-amber-500 to-yellow-500 shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)]';

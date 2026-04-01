@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useProfile } from '@/context/ProfileContext';
 import { useAuth } from '@/context/AuthContext';
-import { useTheme } from '@/context/ThemeContext';
+import { useTheme, GRADIENT_THEMES } from '@/context/ThemeContext';
 import { useSubscription } from '@/context/SubscriptionContext';
 import { useScores } from '@/hooks/useScores';
 import { Card } from '@/components/ui/Card';
@@ -24,6 +24,24 @@ import {
   RecommenderType,
 } from '@/types/profile';
 import { CATEGORY_LABELS } from '@/types/scoring';
+import type { LucideIcon } from 'lucide-react';
+import {
+  User,
+  Crown,
+  Palette,
+  ClipboardList,
+  Bell,
+  Shield,
+  BookOpen,
+  FileCheck,
+  Activity as ActivityIcon,
+  PenLine,
+  Trophy,
+  Mail,
+  Sun,
+  Moon,
+  Monitor,
+} from 'lucide-react';
 
 // ─── Types & Constants ──────────────────────────────────────────────
 
@@ -32,17 +50,17 @@ type ProfileSectionKey = 'academics' | 'testing' | 'activities' | 'essays' | 'aw
 
 interface TabDef {
   key: TabKey;
-  icon: string;
+  icon: LucideIcon;
   label: string;
 }
 
 const TABS: TabDef[] = [
-  { key: 'profile', icon: '👤', label: 'User Profile' },
-  { key: 'subscription', icon: '💎', label: 'Subscription' },
-  { key: 'appearance', icon: '🎨', label: 'Appearance' },
-  { key: 'application', icon: '📋', label: 'Application Profile' },
-  { key: 'notifications', icon: '🔔', label: 'Notifications' },
-  { key: 'privacy', icon: '🔒', label: 'Data & Privacy' },
+  { key: 'profile', icon: User, label: 'User Profile' },
+  { key: 'subscription', icon: Crown, label: 'Subscription' },
+  { key: 'appearance', icon: Palette, label: 'Appearance' },
+  { key: 'application', icon: ClipboardList, label: 'Application Profile' },
+  { key: 'notifications', icon: Bell, label: 'Notifications' },
+  { key: 'privacy', icon: Shield, label: 'Data & Privacy' },
 ];
 
 const RIGOR_OPTIONS = [
@@ -113,20 +131,7 @@ const FEEDBACK_OPTIONS = [
   { value: 'none', label: 'Other' },
 ];
 
-const ACCENT_COLORS = [
-  { name: 'Emerald', value: '#10b981', tw: 'bg-emerald-500' },
-  { name: 'Green', value: '#22c55e', tw: 'bg-green-500' },
-  { name: 'Teal', value: '#14b8a6', tw: 'bg-teal-500' },
-  { name: 'Cyan', value: '#06b6d4', tw: 'bg-cyan-500' },
-  { name: 'Blue', value: '#3b82f6', tw: 'bg-blue-500' },
-  { name: 'Indigo', value: '#6366f1', tw: 'bg-indigo-500' },
-  { name: 'Purple', value: '#8b5cf6', tw: 'bg-purple-500' },
-  { name: 'Violet', value: '#a78bfa', tw: 'bg-violet-400' },
-  { name: 'Pink', value: '#ec4899', tw: 'bg-pink-500' },
-  { name: 'Rose', value: '#f43f5e', tw: 'bg-rose-500' },
-  { name: 'Orange', value: '#f97316', tw: 'bg-orange-500' },
-  { name: 'Amber', value: '#f59e0b', tw: 'bg-amber-500' },
-];
+// Gradient themes are imported from ThemeContext
 
 const FONT_SIZE_OPTIONS = [
   { value: 'small', label: 'Small', class: 'text-sm' },
@@ -160,7 +165,7 @@ function SectionHeader({
   score,
 }: {
   title: string;
-  icon: string;
+  icon: React.ReactNode;
   isOpen: boolean;
   onToggle: () => void;
   score?: number;
@@ -172,7 +177,7 @@ function SectionHeader({
       className="w-full flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 rounded-xl transition-colors"
     >
       <div className="flex items-center gap-3">
-        <span className="text-xl">{icon}</span>
+        {icon}
         <span className="font-semibold text-gray-900 dark:text-white">{title}</span>
         {score != null && (
           <div className="flex items-center gap-2">
@@ -201,7 +206,7 @@ function SectionHeader({
 export default function SettingsPage() {
   const { profile, updateSection, resetProfile, isLoaded } = useProfile();
   const { user, isGuest, signOut } = useAuth();
-  const { theme, themeMode, setThemeMode, isDark, accentColor, setAccentColor, fontSize, setFontSize, cardStyle, setCardStyle } = useTheme();
+  const { theme, themeMode, setThemeMode, isDark, gradientTheme, setGradientTheme, currentGradient, fontSize, setFontSize, cardStyle, setCardStyle } = useTheme();
   const { tier, isPremium, upgradeToPremium, downgradeToFree } = useSubscription();
   const scores = useScores();
 
@@ -601,10 +606,10 @@ export default function SettingsPage() {
   }
 
   function renderAppearance() {
-    const modes: { value: 'light' | 'dark' | 'system'; label: string; icon: string }[] = [
-      { value: 'light', label: 'Light', icon: '☀️' },
-      { value: 'dark', label: 'Dark', icon: '🌙' },
-      { value: 'system', label: 'System', icon: '💻' },
+    const modes: { value: 'light' | 'dark' | 'system'; label: string; icon: LucideIcon }[] = [
+      { value: 'light', label: 'Light', icon: Sun },
+      { value: 'dark', label: 'Dark', icon: Moon },
+      { value: 'system', label: 'System', icon: Monitor },
     ];
 
     const cardStyles = [
@@ -632,15 +637,15 @@ export default function SettingsPage() {
                 className={cn(
                   'flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all cursor-pointer',
                   themeMode === m.value
-                    ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20'
+                    ? 'border-gray-900 dark:border-white bg-gray-50 dark:bg-white/5'
                     : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
                 )}
               >
-                <span className="text-2xl">{m.icon}</span>
+                <m.icon className="w-6 h-6" />
                 <span className={cn(
                   'text-sm font-medium',
                   themeMode === m.value
-                    ? 'text-emerald-700 dark:text-emerald-400'
+                    ? 'text-gray-900 dark:text-white'
                     : 'text-gray-600 dark:text-gray-400'
                 )}>
                   {m.label}
@@ -671,37 +676,51 @@ export default function SettingsPage() {
               <div className={cn('h-2 w-3/4 rounded', isDark ? 'bg-gray-700' : 'bg-gray-200')} />
             </div>
             <div className="mt-3 flex gap-2">
-              <div className="h-6 w-16 rounded-lg" style={{ backgroundColor: accentColor }} />
+              <div className="h-6 w-16 rounded-lg" style={{ background: `linear-gradient(to right, ${currentGradient.from}, ${currentGradient.to})` }} />
               <div className={cn('h-6 w-16 rounded-lg border', isDark ? 'border-gray-600' : 'border-gray-300')} />
             </div>
           </div>
         </Card>
 
-        {/* Accent color */}
+        {/* Gradient theme */}
         <Card>
-          <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Accent Color</h3>
-          <div className="grid grid-cols-6 gap-3">
-            {ACCENT_COLORS.map(c => (
+          <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Color Theme</h3>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            {GRADIENT_THEMES.map(t => (
               <button
-                key={c.value}
+                key={t.id}
                 type="button"
-                onClick={() => setAccentColor(c.value)}
+                onClick={() => setGradientTheme(t.id)}
                 className={cn(
-                  'w-10 h-10 rounded-full transition-all cursor-pointer',
-                  c.tw,
-                  accentColor === c.value
-                    ? 'ring-2 ring-offset-2 ring-gray-900 dark:ring-white dark:ring-offset-gray-800 scale-110'
-                    : 'hover:scale-105 opacity-70 hover:opacity-100'
+                  'relative flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all cursor-pointer',
+                  gradientTheme === t.id
+                    ? 'border-gray-900 dark:border-white shadow-lg scale-[1.02]'
+                    : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:scale-[1.01]'
                 )}
-                title={c.name}
-              />
+              >
+                <div
+                  className="w-full h-8 rounded-lg"
+                  style={{ background: `linear-gradient(to right, ${t.from}, ${t.to})` }}
+                />
+                <span className={cn(
+                  'text-xs font-medium',
+                  gradientTheme === t.id ? 'text-gray-900 dark:text-white' : 'text-gray-500 dark:text-gray-400'
+                )}>
+                  {t.name}
+                </span>
+                {gradientTheme === t.id && (
+                  <div className="absolute top-1.5 right-1.5 w-4 h-4 rounded-full bg-gray-900 dark:bg-white flex items-center justify-center">
+                    <svg className="w-2.5 h-2.5 text-white dark:text-gray-900" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                )}
+              </button>
             ))}
           </div>
-          {accentColor && (
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-3">
-              Selected: <span className="font-medium">{ACCENT_COLORS.find(c => c.value === accentColor)?.name || 'Emerald'}</span>
-            </p>
-          )}
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-3">
+            Selected: <span className="font-medium">{currentGradient.name}</span>
+          </p>
         </Card>
 
         {/* Font size */}
@@ -716,12 +735,12 @@ export default function SettingsPage() {
                 className={cn(
                   'flex flex-col items-center gap-1.5 p-3 rounded-xl border-2 transition-all cursor-pointer',
                   fontSize === f.value
-                    ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20'
+                    ? 'border-gray-900 dark:border-white bg-gray-50 dark:bg-white/5'
                     : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
                 )}
               >
-                <span className={cn('font-medium', f.class, fontSize === f.value ? 'text-emerald-700 dark:text-emerald-400' : 'text-gray-900 dark:text-white')}>Aa</span>
-                <span className={cn('text-xs', fontSize === f.value ? 'text-emerald-600 dark:text-emerald-400' : 'text-gray-500 dark:text-gray-400')}>{f.label}</span>
+                <span className={cn('font-medium', f.class, fontSize === f.value ? 'text-gray-900 dark:text-white' : 'text-gray-900 dark:text-white')}>Aa</span>
+                <span className={cn('text-xs', fontSize === f.value ? 'text-gray-700 dark:text-gray-300' : 'text-gray-500 dark:text-gray-400')}>{f.label}</span>
               </button>
             ))}
           </div>
@@ -740,12 +759,12 @@ export default function SettingsPage() {
                   'flex flex-col items-center gap-2 p-4 border-2 transition-all cursor-pointer',
                   s.preview,
                   cardStyle === s.value
-                    ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20'
+                    ? 'border-gray-900 dark:border-white bg-gray-50 dark:bg-white/5'
                     : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
                 )}
               >
                 <div className={cn('w-12 h-8 border', s.preview, cardStyle === s.value ? 'bg-emerald-500/30 border-emerald-500/50' : 'bg-emerald-500/20 border-emerald-500/30')} />
-                <span className={cn('text-xs', cardStyle === s.value ? 'text-emerald-600 dark:text-emerald-400' : 'text-gray-500 dark:text-gray-400')}>{s.label}</span>
+                <span className={cn('text-xs', cardStyle === s.value ? 'text-gray-700 dark:text-gray-300' : 'text-gray-500 dark:text-gray-400')}>{s.label}</span>
               </button>
             ))}
           </div>
@@ -791,7 +810,7 @@ export default function SettingsPage() {
           <Card className="!p-0 overflow-hidden">
             <SectionHeader
               title={CATEGORY_LABELS.academics}
-              icon="📚"
+              icon={<BookOpen className="w-5 h-5 text-indigo-500" />}
               isOpen={openSection === 'academics'}
               onToggle={() => toggleProfileSection('academics')}
               score={getScoreForCategory('academics')}
@@ -827,7 +846,7 @@ export default function SettingsPage() {
           <Card className="!p-0 overflow-hidden">
             <SectionHeader
               title={CATEGORY_LABELS.testing}
-              icon="📝"
+              icon={<FileCheck className="w-5 h-5 text-indigo-500" />}
               isOpen={openSection === 'testing'}
               onToggle={() => toggleProfileSection('testing')}
               score={getScoreForCategory('testing')}
@@ -852,7 +871,7 @@ export default function SettingsPage() {
           <Card className="!p-0 overflow-hidden">
             <SectionHeader
               title={CATEGORY_LABELS.activities}
-              icon="🏃"
+              icon={<ActivityIcon className="w-5 h-5 text-indigo-500" />}
               isOpen={openSection === 'activities'}
               onToggle={() => toggleProfileSection('activities')}
               score={getScoreForCategory('activities')}
@@ -892,7 +911,7 @@ export default function SettingsPage() {
           <Card className="!p-0 overflow-hidden">
             <SectionHeader
               title={CATEGORY_LABELS.essays}
-              icon="✏️"
+              icon={<PenLine className="w-5 h-5 text-indigo-500" />}
               isOpen={openSection === 'essays'}
               onToggle={() => toggleProfileSection('essays')}
               score={getScoreForCategory('essays')}
@@ -920,7 +939,7 @@ export default function SettingsPage() {
           <Card className="!p-0 overflow-hidden">
             <SectionHeader
               title={CATEGORY_LABELS.awards}
-              icon="🏆"
+              icon={<Trophy className="w-5 h-5 text-indigo-500" />}
               isOpen={openSection === 'awards'}
               onToggle={() => toggleProfileSection('awards')}
               score={getScoreForCategory('awards')}
@@ -955,7 +974,7 @@ export default function SettingsPage() {
           <Card className="!p-0 overflow-hidden">
             <SectionHeader
               title={CATEGORY_LABELS.recommendations}
-              icon="💌"
+              icon={<Mail className="w-5 h-5 text-indigo-500" />}
               isOpen={openSection === 'recommendations'}
               onToggle={() => toggleProfileSection('recommendations')}
               score={getScoreForCategory('recommendations')}
@@ -1197,7 +1216,7 @@ export default function SettingsPage() {
           className="w-full flex items-center justify-between px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl cursor-pointer"
         >
           <div className="flex items-center gap-2">
-            <span>{activeTabDef.icon}</span>
+            {(() => { const Icon = activeTabDef.icon; return <Icon className="w-5 h-5" />; })()}
             <span className="font-medium text-gray-900 dark:text-white">{activeTabDef.label}</span>
           </div>
           <svg
@@ -1217,11 +1236,11 @@ export default function SettingsPage() {
                 className={cn(
                   'w-full flex items-center gap-3 px-4 py-3 text-left transition-colors cursor-pointer',
                   activeTab === tab.key
-                    ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400'
+                    ? 'bg-indigo-50 dark:bg-indigo-900/20 text-indigo-700 dark:text-indigo-400'
                     : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50'
                 )}
               >
-                <span className="text-lg">{tab.icon}</span>
+                <tab.icon className="w-5 h-5" />
                 <span className="font-medium">{tab.label}</span>
               </button>
             ))}
@@ -1242,11 +1261,11 @@ export default function SettingsPage() {
                 className={cn(
                   'w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-left transition-all duration-200 cursor-pointer',
                   activeTab === tab.key
-                    ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 font-semibold shadow-sm'
+                    ? 'bg-indigo-50 dark:bg-indigo-900/20 text-indigo-700 dark:text-indigo-400 font-semibold shadow-sm'
                     : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700/50 hover:text-gray-900 dark:hover:text-white'
                 )}
               >
-                <span className="text-lg">{tab.icon}</span>
+                <tab.icon className="w-5 h-5" />
                 <span className="text-sm">{tab.label}</span>
               </button>
             ))}

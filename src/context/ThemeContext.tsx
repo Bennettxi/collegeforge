@@ -5,14 +5,34 @@ import { createContext, useContext, useState, useEffect, useCallback, ReactNode 
 type Theme = 'light' | 'dark';
 type ThemeMode = 'light' | 'dark' | 'system';
 
+export interface GradientTheme {
+  id: string;
+  name: string;
+  from: string;
+  to: string;
+  accent: string;
+  fromClass: string;
+  toClass: string;
+}
+
+export const GRADIENT_THEMES: GradientTheme[] = [
+  { id: 'indigo', name: 'Indigo Night', from: '#6366f1', to: '#8b5cf6', accent: '#10b981', fromClass: 'from-indigo-500', toClass: 'to-violet-500' },
+  { id: 'ocean', name: 'Ocean Blue', from: '#3b82f6', to: '#06b6d4', accent: '#10b981', fromClass: 'from-blue-500', toClass: 'to-cyan-500' },
+  { id: 'sunset', name: 'Sunset', from: '#f97316', to: '#ec4899', accent: '#f59e0b', fromClass: 'from-orange-500', toClass: 'to-pink-500' },
+  { id: 'forest', name: 'Forest', from: '#10b981', to: '#059669', accent: '#6366f1', fromClass: 'from-emerald-500', toClass: 'to-emerald-600' },
+  { id: 'rose', name: 'Rose Gold', from: '#e11d48', to: '#be185d', accent: '#f59e0b', fromClass: 'from-rose-600', toClass: 'to-pink-700' },
+  { id: 'midnight', name: 'Midnight', from: '#7c3aed', to: '#4f46e5', accent: '#06b6d4', fromClass: 'from-violet-600', toClass: 'to-indigo-600' },
+];
+
 interface ThemeContextValue {
   theme: Theme;
   themeMode: ThemeMode;
   toggleTheme: () => void;
   setThemeMode: (mode: ThemeMode) => void;
   isDark: boolean;
-  accentColor: string;
-  setAccentColor: (color: string) => void;
+  gradientTheme: string;
+  setGradientTheme: (id: string) => void;
+  currentGradient: GradientTheme;
   fontSize: string;
   setFontSize: (size: string) => void;
   cardStyle: string;
@@ -33,8 +53,12 @@ function applyFontSize(size: string) {
   else root.style.fontSize = '16px';
 }
 
-function applyAccentColor(color: string) {
-  document.documentElement.style.setProperty('--accent-color', color);
+function applyGradientTheme(themeId: string) {
+  const theme = GRADIENT_THEMES.find(t => t.id === themeId) || GRADIENT_THEMES[0];
+  const root = document.documentElement;
+  root.style.setProperty('--brand-from', theme.from);
+  root.style.setProperty('--brand-to', theme.to);
+  root.style.setProperty('--brand-accent', theme.accent);
 }
 
 function applyCardStyle(style: string) {
@@ -42,12 +66,16 @@ function applyCardStyle(style: string) {
   root.dataset.cardStyle = style;
 }
 
+const DEFAULT_GRADIENT = GRADIENT_THEMES[0];
+
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState<Theme>('light');
   const [themeMode, setThemeModeState] = useState<ThemeMode>('system');
-  const [accentColor, setAccentColorState] = useState('#10b981');
+  const [gradientTheme, setGradientThemeState] = useState('indigo');
   const [fontSize, setFontSizeState] = useState('default');
   const [cardStyle, setCardStyleState] = useState('rounded');
+
+  const currentGradient = GRADIENT_THEMES.find(t => t.id === gradientTheme) || DEFAULT_GRADIENT;
 
   // Load all saved preferences on mount
   useEffect(() => {
@@ -65,13 +93,13 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
         applyTheme(prefersDark);
       }
 
-      // Accent color
-      const savedAccent = localStorage.getItem('collegesprout_accent_color');
-      if (savedAccent) {
-        setAccentColorState(savedAccent);
-        applyAccentColor(savedAccent);
+      // Gradient theme
+      const savedGradient = localStorage.getItem('collegesprout_gradient_theme');
+      if (savedGradient && GRADIENT_THEMES.some(t => t.id === savedGradient)) {
+        setGradientThemeState(savedGradient);
+        applyGradientTheme(savedGradient);
       } else {
-        applyAccentColor('#10b981');
+        applyGradientTheme('indigo');
       }
 
       // Font size
@@ -128,10 +156,10 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const setAccentColor = useCallback((color: string) => {
-    setAccentColorState(color);
-    applyAccentColor(color);
-    try { localStorage.setItem('collegesprout_accent_color', color); } catch {}
+  const setGradientTheme = useCallback((id: string) => {
+    setGradientThemeState(id);
+    applyGradientTheme(id);
+    try { localStorage.setItem('collegesprout_gradient_theme', id); } catch {}
   }, []);
 
   const setFontSize = useCallback((size: string) => {
@@ -153,8 +181,9 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       toggleTheme,
       setThemeMode,
       isDark: theme === 'dark',
-      accentColor,
-      setAccentColor,
+      gradientTheme,
+      setGradientTheme,
+      currentGradient,
       fontSize,
       setFontSize,
       cardStyle,
@@ -171,8 +200,9 @@ const defaultThemeValue: ThemeContextValue = {
   toggleTheme: () => {},
   setThemeMode: () => {},
   isDark: false,
-  accentColor: '#10b981',
-  setAccentColor: () => {},
+  gradientTheme: 'indigo',
+  setGradientTheme: () => {},
+  currentGradient: DEFAULT_GRADIENT,
   fontSize: 'default',
   setFontSize: () => {},
   cardStyle: 'rounded',

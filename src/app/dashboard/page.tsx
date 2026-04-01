@@ -14,6 +14,17 @@ import { Card } from '@/components/ui/Card';
 import { DashboardSkeleton } from '@/components/ui/Skeleton';
 import { StreakBanner } from '@/components/dashboard/StreakBanner';
 import { cn } from '@/lib/utils';
+import type { LucideIcon } from 'lucide-react';
+import {
+  UserCog,
+  GraduationCap,
+  SlidersHorizontal,
+  CalendarDays,
+  FolderOpen,
+  PenLine,
+  Share2,
+  Award,
+} from 'lucide-react';
 
 const QUICK_ACTION_STYLES = [
   { border: 'border-l-indigo-400', bg: 'bg-indigo-50 dark:bg-indigo-900/20' },
@@ -26,15 +37,15 @@ const QUICK_ACTION_STYLES = [
   { border: 'border-l-purple-400', bg: 'bg-purple-50 dark:bg-purple-900/20' },
 ];
 
-const QUICK_ACTIONS = [
-  { label: 'Edit Profile', href: '/dashboard/settings', icon: '✏️' },
-  { label: 'Add College', href: '/dashboard/colleges', icon: '🏛️' },
-  { label: 'What If?', href: '/dashboard/simulator', icon: '🔮' },
-  { label: 'Calendar', href: '/dashboard/calendar', icon: '📅' },
-  { label: 'Documents', href: '/dashboard/documents', icon: '📁' },
-  { label: 'Essay Coach', href: '/dashboard/essays', icon: '📝' },
-  { label: 'Share Card', href: '/dashboard/share', icon: '🎴' },
-  { label: 'See Badges', href: '/dashboard/badges', icon: '🏅' },
+const QUICK_ACTIONS: { label: string; href: string; icon: LucideIcon }[] = [
+  { label: 'Edit Profile', href: '/dashboard/settings', icon: UserCog },
+  { label: 'Add College', href: '/dashboard/colleges', icon: GraduationCap },
+  { label: 'What If?', href: '/dashboard/simulator', icon: SlidersHorizontal },
+  { label: 'Calendar', href: '/dashboard/calendar', icon: CalendarDays },
+  { label: 'Documents', href: '/dashboard/documents', icon: FolderOpen },
+  { label: 'Essay Coach', href: '/dashboard/essays', icon: PenLine },
+  { label: 'Share Card', href: '/dashboard/share', icon: Share2 },
+  { label: 'See Badges', href: '/dashboard/badges', icon: Award },
 ];
 
 export default function DashboardPage() {
@@ -74,10 +85,10 @@ export default function DashboardPage() {
               )}
             >
               <span className={cn(
-                'text-xl md:text-2xl transition-transform group-hover:scale-105 rounded-lg p-1',
+                'flex items-center justify-center transition-transform group-hover:scale-105 rounded-lg p-1.5',
                 QUICK_ACTION_STYLES[i].bg
               )}>
-                {action.icon}
+                <action.icon className="w-5 h-5 md:w-6 md:h-6 text-current" />
               </span>
               <span className="text-[11px] md:text-xs font-medium text-gray-600 dark:text-gray-400">{action.label}</span>
             </Card>

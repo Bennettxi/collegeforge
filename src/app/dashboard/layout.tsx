@@ -8,27 +8,45 @@ import { SaveIndicator } from '@/components/ui/SaveIndicator';
 
 import { Button } from '@/components/ui/Button';
 import { cn } from '@/lib/utils';
+import type { LucideIcon } from 'lucide-react';
+import {
+  LayoutDashboard,
+  GraduationCap,
+  SlidersHorizontal,
+  CalendarDays,
+  PenLine,
+  FolderOpen,
+  Award,
+  Share2,
+  Settings,
+} from 'lucide-react';
 
-const NAV_ITEMS = [
-  { label: 'Overview', path: '/dashboard', icon: '📊' },
-  { label: 'Colleges', path: '/dashboard/colleges', icon: '🏛️' },
-  { label: 'Simulator', path: '/dashboard/simulator', icon: '🔮' },
-  { label: 'Calendar', path: '/dashboard/calendar', icon: '📅' },
-  { label: 'Essays', path: '/dashboard/essays', icon: '📝' },
-  { label: 'Documents', path: '/dashboard/documents', icon: '📁' },
-  { label: 'Badges', path: '/dashboard/badges', icon: '🏅' },
-  { label: 'Share', path: '/dashboard/share', icon: '🎴' },
-  { label: 'Profile', path: '/dashboard/settings', icon: '⚙️' },
+interface NavItem {
+  label: string;
+  path: string;
+  icon: LucideIcon;
+}
+
+const NAV_ITEMS: NavItem[] = [
+  { label: 'Overview', path: '/dashboard', icon: LayoutDashboard },
+  { label: 'Colleges', path: '/dashboard/colleges', icon: GraduationCap },
+  { label: 'Simulator', path: '/dashboard/simulator', icon: SlidersHorizontal },
+  { label: 'Calendar', path: '/dashboard/calendar', icon: CalendarDays },
+  { label: 'Essays', path: '/dashboard/essays', icon: PenLine },
+  { label: 'Documents', path: '/dashboard/documents', icon: FolderOpen },
+  { label: 'Badges', path: '/dashboard/badges', icon: Award },
+  { label: 'Share', path: '/dashboard/share', icon: Share2 },
+  { label: 'Profile', path: '/dashboard/settings', icon: Settings },
 ];
 
 // Tips accessible from dashboard overview, not in main nav
 
-const MOBILE_NAV = [
-  { label: 'Overview', path: '/dashboard', icon: '📊' },
-  { label: 'Colleges', path: '/dashboard/colleges', icon: '🏛️' },
-  { label: 'Simulator', path: '/dashboard/simulator', icon: '🔮' },
-  { label: 'Docs', path: '/dashboard/documents', icon: '📁' },
-  { label: 'Profile', path: '/dashboard/settings', icon: '⚙️' },
+const MOBILE_NAV: NavItem[] = [
+  { label: 'Overview', path: '/dashboard', icon: LayoutDashboard },
+  { label: 'Colleges', path: '/dashboard/colleges', icon: GraduationCap },
+  { label: 'Simulator', path: '/dashboard/simulator', icon: SlidersHorizontal },
+  { label: 'Docs', path: '/dashboard/documents', icon: FolderOpen },
+  { label: 'Profile', path: '/dashboard/settings', icon: Settings },
 ];
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -72,13 +90,15 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     className={cn(
                       'relative px-2.5 py-1.5 rounded-full text-[13px] font-medium transition-colors whitespace-nowrap',
                       isActive
-                        ? 'bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400'
+                        ? ''
                         : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-white/5'
                     )}
+                    style={isActive ? { color: 'var(--brand-from, #6366f1)' } : undefined}
                   >
+                    <item.icon className="w-4 h-4 inline-block mr-1" />
                     {item.label}
                     {isActive && (
-                      <span className="absolute bottom-0 left-2 right-2 h-0.5 bg-indigo-500 rounded-full animate-scale-in" />
+                      <span className="absolute bottom-0 left-2 right-2 h-0.5 bg-brand-gradient rounded-full animate-scale-in" />
                     )}
                   </Link>
                 );
@@ -111,12 +131,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               href={item.path}
               className={cn(
                 'flex flex-col items-center gap-0.5 text-xs font-medium py-2 px-2',
-                pathname === item.path
-                  ? 'text-indigo-600 dark:text-indigo-400'
-                  : 'text-gray-400 dark:text-gray-500'
+                pathname !== item.path && 'text-gray-400 dark:text-gray-500'
               )}
+              style={pathname === item.path ? { color: 'var(--brand-from, #6366f1)' } : undefined}
             >
-              <span className="text-lg">{item.icon}</span>
+              <item.icon className="w-5 h-5" />
               {item.label}
             </Link>
           ))}

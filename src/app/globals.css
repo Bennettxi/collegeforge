@@ -95,24 +95,40 @@ body {
     radial-gradient(at 50% 50%, rgba(59, 130, 246, 0.08) 0%, transparent 70%);
 }
 
-/* ─── Brand gradient text ─────────────────────────────────────────── */
+/* ─── Brand gradient utilities (driven by CSS custom properties) ──── */
+.bg-brand-gradient {
+  background: linear-gradient(to right, var(--brand-from, #6366f1), var(--brand-to, #8b5cf6));
+}
+
 .text-brand {
-  background: linear-gradient(135deg, #6366f1, #8b5cf6, #10b981);
+  background: linear-gradient(135deg, var(--brand-from, #6366f1), var(--brand-to, #8b5cf6));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-.text-brand-alt {
-  background: linear-gradient(135deg, #3b82f6, #8b5cf6, #ec4899);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.ring-brand {
+  --tw-ring-color: var(--brand-from, #6366f1);
+}
+
+.border-brand {
+  border-color: var(--brand-from, #6366f1);
+}
+
+.shadow-brand {
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--brand-from, #6366f1) 25%, transparent);
+}
+
+.input-focus:focus {
+  outline: 2px solid var(--brand-from, #6366f1);
+  outline-offset: 2px;
+  border-color: var(--brand-from, #6366f1);
 }
 
 /* ─── Glow effects ────────────────────────────────────────────────── */
-.glow-indigo {
-  box-shadow: 0 0 40px rgba(99, 102, 241, 0.15), 0 0 80px rgba(99, 102, 241, 0.05);
+.glow-brand {
+  box-shadow: 0 0 40px color-mix(in srgb, var(--brand-from, #6366f1) 15%, transparent),
+              0 0 80px color-mix(in srgb, var(--brand-from, #6366f1) 5%, transparent);
 }
 
 .glow-emerald {
